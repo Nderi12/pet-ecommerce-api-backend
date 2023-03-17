@@ -4,31 +4,25 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductRequest extends FormRequest
+class OrderStatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     * 
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
      */
     public function rules(): array
     {
         return [
             'title' => ['required', 'string', 'min:3', 'max:191' ],
-            'price' => [ 'required', 'numeric', 'min:0' ],
-            'description' => [ 'required', 'string', 'min:3' ],
-            'metadata' => [ 'string', 'min:3' ],
         ];
     }
 }
