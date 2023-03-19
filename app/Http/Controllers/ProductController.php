@@ -22,9 +22,28 @@ class ProductController extends Controller
     }
     
     /**
-     * Display a listing of the resource.
-     * 
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
+     * @OA\Get(
+     *     path="/products",
+     *     summary="Get a list of products",
+     *     tags={"Products"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="List of products",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Products list"
+     *             ),
+     *             @OA\Property(
+     *                 property="products",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Product")
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function index()
     {
@@ -38,9 +57,30 @@ class ProductController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     * 
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
+     * @OA\Post(
+     *     path="/api/products",
+     *     summary="Create a new product",
+     *     description="Create a new product with the given data",
+     *     tags={"Products"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Data for the new product",
+     *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
+     *     ),
+     *     @OA\Response(
+     *         response="201",
+     *         description="Product created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Product created successfully!"),
+     *             @OA\Property(property="product", ref="#/components/schemas/Product")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="422",
+     *         description="Validation error",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
+     *     )
+     * )
      */
     public function store(ProductRequest $request)
     {
@@ -64,9 +104,31 @@ class ProductController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     * 
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
+     * @OA\Get(
+     *     path="/api/products/{uuid}",
+     *     summary="Get product details",
+     *     description="Get details of the product with the given UUID",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="uuid",
+     *         in="path",
+     *         description="UUID of the product",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Product details retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="product", ref="#/components/schemas/Product")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Product not found",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
+     *     )
+     * )
      */
     public function show($uuid)
     {
@@ -78,13 +140,73 @@ class ProductController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     * 
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
+     * Update a product with the given UUID.
+     *
+     * @OA\Put(
+     *     path="/products/{uuid}",
+     *     summary="Update a product",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="uuid",
+     *         in="path",
+     *         description="The UUID of the product to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             format="uuid"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="The data to update the product with",
+     *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Product updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="success",
+     *                 type="string",
+     *                 example="Product updated successfully!"
+     *             ),
+     *             @OA\Property(
+     *                 property="product",
+     *                 ref="#/components/schemas/Product"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Product not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *                 example="Product not found"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="422",
+     *         description="Unprocessable Entity",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *                 example="The given data was invalid"
+     *             ),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="object",
+     *                 ref="#/components/schemas/ValidationErrors"
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function update(ProductRequest $request, $uuid)
     {
-        dd($uuid);
         $product = Product::where('uuid', $uuid)->first();
 
         //validate data
@@ -101,17 +223,60 @@ class ProductController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     * 
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
+     * @OA\Delete(
+     *     path="/api/products/{uuid}",
+     *     summary="Delete a product by UUID",
+     *     description="Delete a product by its UUID.",
+     *     operationId="deleteProductByUUID",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="uuid",
+     *         in="path",
+     *         description="UUID of the product to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Product deleted successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="success",
+     *                 type="string",
+     *                 example="Product deleted successfully!"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Product not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *                 example="Product not found"
+     *             )
+     *         )
+     *     )
+     * )
      */
-    public function destroy(Product $product)
+    public function destroy($uuid)
     {
+        $product = Product::where('uuid', $uuid)->first();
+
+        if (!$product) {
+            return response()->json([
+                'error' => 'Product not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         // Delete the product
         $product->delete();
 
         // Return response with message
-        return redirect()->back()->with([
+        return response()->json([
             'success' => 'Product deleted successfully!'
         ], Response::HTTP_OK);
     }
