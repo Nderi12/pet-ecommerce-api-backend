@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
-class OrderStatusStatusController extends Controller
+class OrderStatusController extends Controller
 {
     /**
      * Create a new AuthController instance.
@@ -18,7 +18,7 @@ class OrderStatusStatusController extends Controller
      */
     public function __construct() {
         // Functions inside the authentication controller can not be accessed without having the valid token.
-        $this->middleware('auth:api');
+        // $this->middleware('auth:api');
     }
     
     /**
@@ -30,9 +30,15 @@ class OrderStatusStatusController extends Controller
     {
         $orderStatuses = OrderStatus::all();
 
+        if (!$orderStatuses) {
+            return response()->json([
+                'error' => 'Order statuses not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         // Return response with message and data
         return response()->json([
-            'message' => 'Order status list',
+            'message' => 'Order statuses list',
             'orderStatuses' => $orderStatuses
         ], Response::HTTP_OK);
     }
@@ -57,8 +63,7 @@ class OrderStatusStatusController extends Controller
 
         // Return response with message and data
         return response()->json([
-            'message' => 'Order status created successfully!',
-            'orderStatus' => $orderStatus
+            'message' => 'Order status created successfully!'
         ], Response::HTTP_CREATED); // 201 response for created
     }
 
@@ -67,8 +72,16 @@ class OrderStatusStatusController extends Controller
      * 
      * @author Nderi Kamau <nderikamau1212@gmail.com>
      */
-    public function show(OrderStatus $orderStatus)
+    public function show($uuid)
     {
+        $orderStatus = OrderStatus::where('uuid', $uuid)->first();
+
+        if (!$orderStatus) {
+            return response()->json([
+                'error' => 'Order status not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         return response()->json([
             'orderStatus' => $orderStatus
         ], Response::HTTP_OK);
@@ -79,8 +92,10 @@ class OrderStatusStatusController extends Controller
      * 
      * @author Nderi Kamau <nderikamau1212@gmail.com>
      */
-    public function update(OrderStatusRequest $request, OrderStatus $orderStatus)
+    public function update(OrderStatusRequest $request, $uuid)
     {
+        $orderStatus = OrderStatus::where('uuid', $uuid)->first();
+
         //validate data
         $data = $request->validated();
 
@@ -89,8 +104,7 @@ class OrderStatusStatusController extends Controller
 
         // Return response with message and data
         return response()->json([
-            'success' => 'Order status updated successfully!',
-            'orderStatus' => $orderStatus
+            'success' => 'Order status updated successfully!'
         ], Response::HTTP_OK);
     }
 
@@ -99,8 +113,16 @@ class OrderStatusStatusController extends Controller
      * 
      * @author Nderi Kamau <nderikamau1212@gmail.com>
      */
-    public function destroy(OrderStatus $orderStatus)
+    public function destroy($uuid)
     {
+        $orderStatus = OrderStatus::where('uuid', $uuid)->first();
+
+        if (!$orderStatus) {
+            return response()->json([
+                'error' => 'Order status not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         // Delete the order status
         $orderStatus->delete();
 

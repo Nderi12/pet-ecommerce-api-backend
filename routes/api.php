@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,13 @@ Route::group(['prefix' => 'v1'], function  () {
     Route::get('products', [ProductController::class, 'index']);
     Route::post('product/create', [ProductController::class, 'store']);
     Route::get('product/{uuid}', [ProductController::class, 'show']);
-    Route::put('product/{uuid}', [ProductController::class, 'update']);
+    Route::post('product/{uuid}', [ProductController::class, 'update']);
     Route::delete('product/{uuid}', [ProductController::class, 'destroy']);
+
+    // Order status endpoints/apis
+    Route::get('order-statuses', [OrderStatusController::class, 'index']);
+    Route::post('order-status/create', [OrderStatusController::class, 'store']);
+    Route::get('order-status/{uuid}', [OrderStatusController::class, 'show']);
+    Route::put('order-status/{uuid}', [OrderStatusController::class, 'update']);
+    Route::delete('order-status/{uuid}', [OrderStatusController::class, 'destroy']);
 });
