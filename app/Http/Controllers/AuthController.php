@@ -103,7 +103,7 @@ class AuthController extends Controller
             // Configures the audience (aud claim)
             ->permittedFor(config('app.url'))
             // Configures the id (jti claim)
-            ->identifiedBy('4f1g23a12aa')
+            // ->identifiedBy('4f1g23a12aa')
             // Configures the time that the token was issue (iat claim)
             ->issuedAt($now)
             // Configures the time that the token can be used (nbf claim)

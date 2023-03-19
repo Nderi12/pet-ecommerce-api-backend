@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\ProductController;
@@ -21,7 +22,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'v1'], function  () {
+Route::group(['prefix' => 'v1'], function() {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
+
+Route::group(['middleware' => 'jwt', 'prefix' => 'v1'], function  () {
     // Category endpoints/apis
     Route::get('categories', [CategoryController::class, 'index']);
     Route::post('category/create', [CategoryController::class, 'store']);
