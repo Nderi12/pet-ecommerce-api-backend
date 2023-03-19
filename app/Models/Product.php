@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory, HasUuid;
+    use HasFactory, HasUuid, SoftDeletes;
 
     /**
      * Protected fillables
@@ -17,6 +18,7 @@ class Product extends Model
      * @author Nderi Kamau <nderikamau1212@gmail.com>
      */
     protected $fillable = [
+        'category_uuid',
         'title',
         'price',
         'description',
