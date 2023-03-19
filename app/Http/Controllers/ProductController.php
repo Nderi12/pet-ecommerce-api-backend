@@ -16,9 +16,10 @@ class ProductController extends Controller
      * @return void
      * @author Nderi Kamau <nderikamau1212@gmail.com>
      */
-    public function __construct() {
+    public function __construct()
+    {
         // Functions inside the authentication controller can not be accessed without having the valid token.
-        // $this->middleware('auth:api');
+        $this->middleware('jwt');
     }
     
     /**

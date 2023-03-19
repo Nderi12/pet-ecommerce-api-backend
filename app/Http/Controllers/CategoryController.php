@@ -19,7 +19,7 @@ class CategoryController extends Controller
     public function __construct()
     {
         // Functions inside the authentication controller can not be accessed without having the valid token.
-        // $this->middleware('auth:api');
+        $this->middleware('jwt');
     }
 
     /**
