@@ -18,26 +18,10 @@ class Category extends Model
      * @author Nderi Kamau <nderikamau1212@gmail.com>
      */
     protected $fillable = [
+        'uuid',
         'slug',
         'title',
     ];
-
-    /**
-     * Static method called automatically when the model is booted
-     *
-     * @var array
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        // Closure that is executed when a new instance of the model is being created.
-        static::creating(function ($category) {
-            // Set the value of the slug on the model generated from the name
-            $category->slug = Str::slug($category->name);
-        });
-    }
 
     /**
      * Get all products to a category
@@ -45,8 +29,8 @@ class Category extends Model
      * @return void
      * @author Nderi Kamau <nderikamau1212@gmail.com>
      */
-    public function product()
+    public function products()
     {
-        return $this->belongsTo(Product::class);
+        return $this->hasMany(Product::class);
     }
 }
