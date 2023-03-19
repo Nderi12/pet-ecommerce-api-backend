@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use DateTimeImmutable;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
@@ -97,7 +98,7 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Successfully registered.',
             'user' => $user
-        ], 201);
+        ], Response::HTTP_OK);
     }
 
     public function login(Request $request)
@@ -123,7 +124,7 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Successfully logged in.',
                 'token' => $token
-            ], 200);
+            ], Response::HTTP_OK);
         }
 
         return response()->json([
@@ -137,7 +138,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Successfully logged out.'
-        ], 200);
+        ], Response::HTTP_OK);
     }
 
     public function issueToken($user_id)

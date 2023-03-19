@@ -35,7 +35,7 @@ Route::group(['middleware' => 'jwt', 'prefix' => 'v1'], function  () {
     Route::get('products', [ProductController::class, 'index']);
     Route::post('product/create', [ProductController::class, 'store']);
     Route::get('product/{uuid}', [ProductController::class, 'show']);
-    Route::post('product/{uuid}', [ProductController::class, 'update']);
+    Route::put('product/{uuid}', [ProductController::class, 'update']);
     Route::delete('product/{uuid}', [ProductController::class, 'destroy']);
 
     // Order status endpoints/apis
