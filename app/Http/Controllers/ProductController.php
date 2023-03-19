@@ -32,9 +32,7 @@ class ProductController extends Controller
      *         description="Successful operation",
      *         @OA\JsonContent(
      *             @OA\Property(
-     *                 property="products",
-     *                 type="array",
-     *                 @OA\Items(ref="#/components/schemas/Product")
+     *                 property="products"
      *             )
      *         )
      *     )
@@ -63,8 +61,7 @@ class ProductController extends Controller
      *     tags={"Products"},
      *     @OA\RequestBody(
      *         required=true,
-     *         description="Product object that needs to be created",
-     *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
+     *         description="Product object that needs to be created"
      *     ),
      *     @OA\Response(
      *         response="201",
@@ -118,8 +115,7 @@ class ProductController extends Controller
      *         description="Successful operation",
      *         @OA\JsonContent(
      *             @OA\Property(
-     *                 property="product",
-     *                 ref="#/components/schemas/Product"
+     *                 property="product"
      *             )
      *         )
      *     ),
@@ -160,8 +156,7 @@ class ProductController extends Controller
      *         )
      *     ),
      *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
+     *         required=true
      *     ),
      *     @OA\Response(
      *         response="200",

@@ -22,53 +22,39 @@ class AuthController extends Controller
     }
 
     /**
-     * Register a new user.
+     * Registers a new user
      *
      * @OA\Post(
-     *     path="/api/register",
-     *     summary="Register a new user",
+     *     path="/register",
      *     tags={"Authentication"},
+     *     summary="Registers a new user",
+     *     description="Registers a new user with the specified details",
+     *     operationId="registerUser",
      *     @OA\RequestBody(
-     *         description="User object that needs to be added to the system",
      *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/User")
-     *     ),
-     *     @OA\Response(
-     *         response="201",
-     *         description="User created successfully",
+     *         description="Fields needed to register a new user",
      *         @OA\JsonContent(
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="Successfully registered."
-     *             ),
-     *             @OA\Property(
-     *                 property="user",
-     *                 ref="#/components/schemas/User"
-     *             )
+     *             @OA\Property(property="name", type="string", example="John Doe"),
+     *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
+     *             @OA\Property(property="phone_number", type="string", example="0123456789"),
+     *             @OA\Property(property="address", type="string", example="123 Main Street, Anytown, USA"),
+     *             @OA\Property(property="password", type="string", minLength=8, example="secretpassword")
      *         )
      *     ),
      *     @OA\Response(
-     *         response="422",
-     *         description="Unprocessable Entity",
+     *         response=200,
+     *         description="User registered successfully",
      *         @OA\JsonContent(
-     *             @OA\Property(
-     *                 property="errors",
-     *                 type="object",
-     *                 example={
-     *                     "name": {
-     *                         "The name field is required."
-     *                     },
-     *                     "email": {
-     *                         "The email field is required."
-     *                     },
-     *                     "password": {
-     *                         "The password field is required."
-     *                     }
-     *                 }
-     *             )
+     *             @OA\Property(property="message", type="string", example="Successfully registered."),
      *         )
-     *     )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation errors encountered during registration",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     ),
      * )
      */
     public function register(Request $request)
@@ -80,13 +66,13 @@ class AuthController extends Controller
             'address' => 'required',
             'password' => 'required|string|min:8',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors()
             ], 422);
         }
-
+    
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -94,13 +80,45 @@ class AuthController extends Controller
             'phone_number' => $request->phone_number,
             'password' => bcrypt($request->password),
         ]);
-
+    
         return response()->json([
             'message' => 'Successfully registered.',
             'user' => $user
         ], Response::HTTP_OK);
     }
+    
 
+    /**
+    * @OA\Post(
+    *     path="/api/login",
+    *     summary="Logs in a user by providing email and password credentials",
+    *     description="Logs in a user and retrieves an access token",
+    *     tags={"Authentication"},
+    *     @OA\Response(
+    *         response="200",
+    *         description="User logged in successfuly",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="message", type="string", example="Successfully logged in."),
+    *             @OA\Property(property="token", type="string", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImZhNjViODlk...[jwt access token]")
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response="401",
+    *         description="Invalid email or password",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="message", type="string", example="Invalid email or password.")
+    *         )
+    *     ),
+    *     @OA\RequestBody(
+    *         description="The credential details of the user",
+    *         required=true,
+    *         @OA\JsonContent(
+    *             @OA\Property(property="email", type="string", example="john_doe@example.com"),
+    *             @OA\Property(property="password", type="string", example="password")
+    *         )
+    *     )
+    * )
+    */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [

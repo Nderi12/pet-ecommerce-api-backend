@@ -24,20 +24,26 @@ class CategoryController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/categories",
-     *     summary="Get all categories",
-     *     tags={"Categories"},
-     *     @OA\Response(
-     *         response="200",
-     *         description="Successful operation",
-     *         @OA\JsonContent(
-     *             @OA\Property(
-     *                 property="categories",
-     *                 type="array",
-     *                 @OA\Items(ref="#/components/schemas/Category")
-     *             )
-     *         )
-     *     )
+     *      path="/api/categories",
+     *      operationId="getCategoriesList",
+     *      summary="Get list of Categories",
+     *      description="Returns list of categories",
+     *      tags={"Categories"},
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      	  @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="categories",
+     *                  collectionFormat="multi"
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Categories not found"
+     *      )
      * )
      */
     public function index()
@@ -63,8 +69,7 @@ class CategoryController extends Controller
      *     tags={"Categories"},
      *     @OA\RequestBody(
      *         required=true,
-     *         description="Category object that needs to be created",
-     *         @OA\JsonContent(ref="#/components/schemas/CategoryRequest")
+     *         description="Category object that needs to be created"
      *     ),
      *     @OA\Response(
      *         response="201",
@@ -118,8 +123,7 @@ class CategoryController extends Controller
      *         description="Successful operation",
      *         @OA\JsonContent(
      *             @OA\Property(
-     *                 property="category",
-     *                 ref="#/components/schemas/Category"
+     *                 property="category"
      *             )
      *         )
      *     ),
@@ -160,8 +164,7 @@ class CategoryController extends Controller
      *         )
      *     ),
      *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/CategoryRequest")
+     *         required=true
      *     ),
      *     @OA\Response(
      *         response="200",
