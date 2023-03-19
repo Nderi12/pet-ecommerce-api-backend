@@ -115,9 +115,20 @@ class CategoryTest extends TestCase
      */
     private function getJwtToken()
     {
-        // Implement your logic to get a valid JWT token for authentication
-        // and return it as a string.
-        $token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImZvbyI6ImJhciJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdCIsImlhdCI6MTY3OTI0MDk5MC4yNTQ4NzcsIm5iZiI6MTY3OTI0MTA1MC4yNTQ4NzcsImV4cCI6MTY3OTI0NDU5MC4yNTQ4NzcsInVpZCI6MX0.lBXJ0q5qfRvdjMM6tZNEwaikqTl6AQiM8mCojLEbM_I";
+        $user = \App\Models\User::factory()->create([
+            'email' => 'test@example.com',
+            'password' => bcrypt('password')
+        ]);
+    
+        $response = $this->postJson('/api/v1/admin/login', [
+            'email' => 'test@example.com',
+            'password' => 'password'
+        ]);
+    
+        $response->assertStatus(200);
+    
+        $token = $response->json('token');
+    
         return $token;
     }
 }
