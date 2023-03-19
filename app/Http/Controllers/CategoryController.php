@@ -44,6 +44,12 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
 
+        if (!$categories) {
+            return response()->json([
+                'error' => 'Categories not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         // Return response with message and data
         return response()->json([
             'categories' => $categories
@@ -127,6 +133,12 @@ class CategoryController extends Controller
     {
         $category = Category::where('uuid', $uuid)->first();
 
+        if (!$category) {
+            return response()->json([
+                'error' => 'Category not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         return response()->json([
             'category' => $category
         ], Response::HTTP_OK);
@@ -164,6 +176,12 @@ class CategoryController extends Controller
     public function update(CategoryRequest $request, $uuid)
     {
         $category = Category::where('uuid', $uuid)->first();
+
+        if (!$category) {
+            return response()->json([
+                'error' => 'Category not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         //validate data
         $data = $request->validated();
@@ -205,6 +223,12 @@ class CategoryController extends Controller
     public function destroy($uuid)
     {
         $category = Category::where('uuid', $uuid)->first();
+
+        if (!$category) {
+            return response()->json([
+                'error' => 'Category not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         //  Delete the category
         $category->delete();

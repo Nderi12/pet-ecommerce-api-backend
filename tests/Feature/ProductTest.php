@@ -11,6 +11,20 @@ use Tests\TestCase;
 class ProductTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
+
+    /**
+     * Test for getting all products via API.
+     *
+     * @return void
+     */
+    public function testGetAllProducts()
+    {
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $this->getJwtToken(),
+        ])->get('/api/v1/products');
+
+        $response->assertStatus(200);
+    }
     
     /**
      * Test the creation of a product.
@@ -49,51 +63,50 @@ class ProductTest extends TestCase
      *
      * @return void
      */
-    // public function testProductUpdate()
-    // {
-    //     $category = Category::factory()->create();
-    //     $product = Product::factory()->create(['category_uuid' => $category->uuid]);
+    public function testProductUpdate()
+    {
+        $category = Category::factory()->create();
+        $product = Product::factory()->create(['category_uuid' => $category->uuid]);
 
-    //     $data = [
-    //         'title' => $this->faker->sentence,
-    //         'price' => $this->faker->randomFloat(2, 10, 100),
-    //         'description' => $this->faker->paragraph,
-    //         'category_uuid' => $category->uuid,
-    //         'metadata' => ['key' => 'value']
-    //     ];
+        $data = [
+            'title' => $this->faker->sentence,
+            'price' => $this->faker->randomFloat(2, 10, 100),
+            'description' => $this->faker->paragraph,
+            'category_uuid' => $category->uuid,
+            'metadata' => ['key' => 'value']
+        ];
 
-    //     $response = $this->withHeaders([
-    //         'Authorization' => 'Bearer ' . $this->getJwtToken(),
-    //     ])->put('/api/v1/product/' . $product->uuid, $data);
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $this->getJwtToken(),
+        ])->put('/api/v1/product/' . $product->uuid, $data);
 
-    //     $response->assertStatus(200);
+        $response->assertStatus(200);
 
-    //     $product = $product->fresh();
+        $product = $product->fresh();
 
-    //     $this->assertEquals($product->title, $data['title']);
-    //     $this->assertEquals($product->price, $data['price']);
-    //     $this->assertEquals($product->description, $data['description']);
-    //     $this->assertEquals($product->category_uuid, $data['category_uuid']);
-    //     $this->assertEquals($product->metadata, $data['metadata']);
-    // }
+        $this->assertEquals($product->title, $data['title']);
+        $this->assertEquals($product->price, $data['price']);
+        $this->assertEquals($product->description, $data['description']);
+        $this->assertEquals($product->category_uuid, $data['category_uuid']);
+        $this->assertEquals($product->metadata, $data['metadata']);
+    }
 
-    // /**
-    //  * Test the deletion of a product.
-    //  *
-    //  * @return void
-    //  */
-    // public function testProductDeletion()
-    // {
-    //     $user = \App\Models\User::factory()->create();
-    //     $product = Category::factory()->create();
+    /**
+     * Test the deletion of a product.
+     *
+     * @return void
+     */
+    public function testProductDeletion()
+    {
+        $product = Product::factory()->create();
 
-    //     $response = $this->withHeaders([
-    //         'Authorization' => 'Bearer ' . $this->getJwtToken(),
-    //     ])->delete('/api/v1/product/' . $product->uuid);
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $this->getJwtToken(),
+        ])->delete('/api/v1/product/' . $product->uuid);
 
-    //     $response->assertStatus(200);
-    //     $this->assertDatabaseMissing('categories', $product->toArray());
-    // }
+        $response->assertStatus(200);
+        $this->assertDatabaseMissing('products', $product->toArray());
+    }
 
     /**
      * Test the retrieval of a product.
@@ -103,7 +116,7 @@ class ProductTest extends TestCase
     public function testProductRetrieval()
     {
         $category = Category::factory()->create();
-        $product = Product::factory()->create();
+        $product = Product::factory()->create(['category_uuid' => $category->uuid]);
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->getJwtToken(),

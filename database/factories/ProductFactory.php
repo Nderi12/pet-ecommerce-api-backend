@@ -16,12 +16,7 @@ class ProductFactory extends Factory
             'price' => $this->faker->randomFloat(2, 10, 100),
             'description' => $this->faker->paragraph(),
             'category_uuid' => $this->faker->uuid(),
-            'metadata' => [
-                'color' => $this->faker->safeColorName(),
-                'size' => $this->faker->randomElement(['XS', 'S', 'M', 'L', 'XL']),
-                'material' => $this->faker->word(),
-                'weight' => $this->faker->randomFloat(2, 0.1, 10),
-            ],
+            'metadata' => ['key' => 'value'],
         ];
     }
 }

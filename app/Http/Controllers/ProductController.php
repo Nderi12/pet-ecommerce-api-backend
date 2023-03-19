@@ -21,27 +21,63 @@ class ProductController extends Controller
         // Functions inside the authentication controller can not be accessed without having the valid token.
         $this->middleware('jwt');
     }
-    
+
     /**
-     * Display a listing of the resource.
-     * 
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
+     * @OA\Get(
+     *     path="/products",
+     *     summary="Get all products",
+     *     tags={"Products"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="products",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Product")
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function index()
     {
         $products = Product::all();
 
+        if (!$products) {
+            return response()->json([
+                'error' => 'Products not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         // Return response with message and data
         return response()->json([
-            'message' => 'Products list',
             'products' => $products
         ], Response::HTTP_OK);
     }
 
     /**
-     * Store a newly created resource in storage.
-     * 
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
+     * @OA\Post(
+     *     path="/products",
+     *     summary="Create a new product",
+     *     tags={"Products"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Product object that needs to be created",
+     *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
+     *     ),
+     *     @OA\Response(
+     *         response="201",
+     *         description="Product created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="A message indicating that the product was created successfully."
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function store(ProductRequest $request)
     {
@@ -51,68 +87,154 @@ class ProductController extends Controller
         // Create an empty product
         $product = Product::make();
 
-        DB::transaction(function () use($data, $product) {
-           // create a new product from the validated data
-           $product->create($data);
+        DB::transaction(function () use ($data, $product) {
+            // create a new product from the validated data
+            $product->create($data);
         });
-
 
         // Return response with message and data
         return response()->json([
-            'message' => 'Product created successfully!',
-            'product' => $product
+            'message' => 'Product created successfully!'
         ], Response::HTTP_CREATED); // 201 response for created
     }
 
     /**
-     * Display the specified resource.
-     * 
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
+     * @OA\Get(
+     *     path="/products/{uuid}",
+     *     summary="Get a single product by UUID",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="uuid",
+     *         in="path",
+     *         description="UUID of the product to get",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             format="uuid"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="product",
+     *                 ref="#/components/schemas/Product"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Product not found"
+     *     )
+     * )
      */
     public function show($uuid)
     {
         $product = Product::where('uuid', $uuid)->first();
 
+        if (!$product) {
+            return response()->json([
+                'error' => 'Product not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         return response()->json([
             'product' => $product
         ], Response::HTTP_OK);
     }
 
     /**
-     * Update the specified resource in storage.
-     * 
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
+     * @OA\Put(
+     *     path="/products/{uuid}",
+     *     summary="Update a product",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="uuid",
+     *         in="path",
+     *         description="The UUID of the product to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             format="uuid"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/ProductRequest")
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Product updated successfully"
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Product not found"
+     *     )
+     * )
      */
     public function update(ProductRequest $request, $uuid)
     {
-        dd($uuid);
         $product = Product::where('uuid', $uuid)->first();
+
+        if (!$product) {
+            return response()->json([
+                'error' => 'Product not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         //validate data
         $data = $request->validated();
 
         // Update the product data
-        $product->update($data);
+        $product->update($request->all());
 
-        // Return response with message and data
+        //Return response with message and data
         return response()->json([
-            'success' => 'Product updated successfully!',
-            'product' => $product
+            'success' => 'Product updated successfully!'
         ], Response::HTTP_OK);
     }
 
     /**
-     * Remove the specified resource from storage.
-     * 
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
+     * @OA\Delete(
+     *     path="/products/{uuid}",
+     *     summary="Delete a product",
+     *     tags={"Products"},
+     *     @OA\Parameter(
+     *         name="uuid",
+     *         in="path",
+     *         description="The UUID of the product to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             format="uuid"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Product deleted successfully"
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Product not found"
+     *     )
+     * )
      */
-    public function destroy(Product $product)
+    public function destroy($uuid)
     {
-        // Delete the product
+        $product = Product::where('uuid', $uuid)->first();
+
+        if (!$product) {
+            return response()->json([
+                'error' => 'Product not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        //  Delete the product
         $product->delete();
 
         // Return response with message
-        return redirect()->back()->with([
+        return response()->json([
             'success' => 'Product deleted successfully!'
         ], Response::HTTP_OK);
     }
