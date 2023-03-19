@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\ProductController;
@@ -17,11 +18,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'v1/admin'], function() {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
 });
 
-Route::group(['prefix' => 'v1'], function  () {
+Route::group(['middleware' => 'jwt', 'prefix' => 'v1'], function  () {
     // Category endpoints/apis
     Route::get('categories', [CategoryController::class, 'index']);
     Route::post('category/create', [CategoryController::class, 'store']);
@@ -33,7 +35,7 @@ Route::group(['prefix' => 'v1'], function  () {
     Route::get('products', [ProductController::class, 'index']);
     Route::post('product/create', [ProductController::class, 'store']);
     Route::get('product/{uuid}', [ProductController::class, 'show']);
-    Route::post('product/{uuid}', [ProductController::class, 'update']);
+    Route::put('product/{uuid}', [ProductController::class, 'update']);
     Route::delete('product/{uuid}', [ProductController::class, 'destroy']);
 
     // Order status endpoints/apis
