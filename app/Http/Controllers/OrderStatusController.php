@@ -38,9 +38,7 @@ class OrderStatusController extends Controller
      *                 example="Order statuses list"
      *             ),
      *             @OA\Property(
-     *                 property="orderStatuses",
-     *                 type="array",
-     *                 @OA\Items(ref="#/components/schemas/OrderStatus")
+     *                 property="orderStatuses"
      *             )
      *         )
      *     ),
@@ -83,8 +81,7 @@ class OrderStatusController extends Controller
      *     tags={"Order Statuses"},
      *     @OA\RequestBody(
      *         required=true,
-     *         description="Data for creating a new order status",
-     *         @OA\JsonContent(ref="#/components/schemas/OrderStatusRequest")
+     *         description="Data for creating a new order status"
      *     ),
      *     @OA\Response(
      *         response=201,
@@ -110,8 +107,7 @@ class OrderStatusController extends Controller
      *             ),
      *             @OA\Property(
      *                 property="errors",
-     *                 type="object",
-     *                 ref="#/components/schemas/OrderStatusValidationErrors"
+     *                 type="object"
      *             )
      *         )
      *     )
@@ -157,8 +153,7 @@ class OrderStatusController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(
-     *                 property="orderStatus",
-     *                 ref="#/components/schemas/OrderStatus"
+     *                 property="orderStatus"
      *             )
      *         )
      *     ),
@@ -208,8 +203,7 @@ class OrderStatusController extends Controller
      *     ),
      *     @OA\RequestBody(
      *         required=true,
-     *         description="Data for updating an existing order status",
-     *         @OA\JsonContent(ref="#/components/schemas/OrderStatusRequest")
+     *         description="Data for updating an existing order status"
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -247,8 +241,7 @@ class OrderStatusController extends Controller
      *             ),
      *             @OA\Property(
      *                 property="errors",
-     *                 type="object",
-     *                 ref="#/components/schemas/OrderStatusValidationErrors"
+     *                 type="object"
      *             )
      *         )
      *     )
