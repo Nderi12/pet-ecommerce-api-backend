@@ -18,7 +18,7 @@ class ProductController extends Controller
      */
     public function __construct() {
         // Functions inside the authentication controller can not be accessed without having the valid token.
-        $this->middleware('auth:api');
+        // $this->middleware('auth:api');
     }
     
     /**
@@ -55,6 +55,7 @@ class ProductController extends Controller
            $product->create($data);
         });
 
+
         // Return response with message and data
         return response()->json([
             'message' => 'Product created successfully!',
@@ -67,8 +68,10 @@ class ProductController extends Controller
      * 
      * @author Nderi Kamau <nderikamau1212@gmail.com>
      */
-    public function show(Product $product)
+    public function show($uuid)
     {
+        $product = Product::where('uuid', $uuid)->first();
+
         return response()->json([
             'product' => $product
         ], Response::HTTP_OK);
@@ -79,8 +82,11 @@ class ProductController extends Controller
      * 
      * @author Nderi Kamau <nderikamau1212@gmail.com>
      */
-    public function update(ProductRequest $request, Product $product)
+    public function update(ProductRequest $request, $uuid)
     {
+        dd($uuid);
+        $product = Product::where('uuid', $uuid)->first();
+
         //validate data
         $data = $request->validated();
 

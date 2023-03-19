@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->foreignIdFor(Brand::class)->constrained();
             $table->string('category_uuid');
             $table->string('title');
             $table->float('price');
