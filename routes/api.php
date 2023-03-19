@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,10 +21,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'v1'], function  () {
-    // Route::resource('categories', CategoryController::class)->only('index', 'show', 'update', 'delete');
-    Route::get('/categories', [CategoryController::class, 'index']);
-    Route::get('/category/create', [CategoryController::class, 'store']);
-    Route::post('/category/{uuid}', [CategoryController::class, 'show']);
-    Route::put('/category/{uuid}', [CategoryController::class, 'update']);
-    Route::delete('/category/{uuid}', [CategoryController::class, 'destroy']);
+    // Category endpoints/apis
+    Route::get('categories', [CategoryController::class, 'index']);
+    Route::post('category/create', [CategoryController::class, 'store']);
+    Route::get('category/{uuid}', [CategoryController::class, 'show']);
+    Route::put('category/{uuid}', [CategoryController::class, 'update']);
+    Route::delete('category/{uuid}', [CategoryController::class, 'destroy']);
+
+    // Products endpoints/apis
+    Route::get('products', [ProductController::class, 'index']);
+    Route::post('product/create', [ProductController::class, 'store']);
+    Route::get('product/{uuid}', [ProductController::class, 'show']);
+    Route::put('product/{uuid}', [ProductController::class, 'update']);
+    Route::delete('product/{uuid}', [ProductController::class, 'destroy']);
 });

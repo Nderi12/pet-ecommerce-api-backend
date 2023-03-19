@@ -16,6 +16,18 @@ class ProductRequest extends FormRequest
         return true;
     }
 
+    public function messages()
+    {
+        return [
+            'title.required' => 'Please enter a title for your product.',
+            'price.required' => 'Please enter a price for your product.',
+            'price.numeric' => 'The price must be a numeric value.',
+            'description.required' => 'Please enter a description for your product.',
+            'category_uuid.required' => 'Please select a category for your product.',
+            'metadata.json' => 'The metadata field must be a valid JSON string.',
+        ];
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -28,7 +40,8 @@ class ProductRequest extends FormRequest
             'title' => ['required', 'string', 'min:3', 'max:191' ],
             'price' => [ 'required', 'numeric', 'min:0' ],
             'description' => [ 'required', 'string', 'min:3' ],
-            'metadata' => [ 'string', 'min:3' ],
+            'category_uuid' => [ 'required', 'string', 'min:3' ],
+            'metadata' => [ 'required' ],
         ];
     }
 }
