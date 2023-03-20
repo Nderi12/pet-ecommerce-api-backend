@@ -13,6 +13,11 @@ class Blog extends Model
     protected $fillable = [
         'slug',
         'title',
-        'description',
+        'content',
+        'metadata',
+    ];
+
+    protected $casts = [
+        'metadata' => 'json',
     ];
 }

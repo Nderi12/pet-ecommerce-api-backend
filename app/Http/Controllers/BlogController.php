@@ -24,7 +24,7 @@ class BlogController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/blogs",
+     *      path="/api/v1/main/blogs",
      *      operationId="getBlogsList",
      *      summary="Get list of Blogs",
      *      description="Returns list of blogs",
@@ -64,12 +64,41 @@ class BlogController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/blogs",
+     *     path="/api/v1/main/blog/create",
      *     summary="Create a new blog",
-     *     tags={"Blogs"},
+     *     tags={"Blog"},
      *     @OA\RequestBody(
-     *         required=true,
-     *         description="Blog object that needs to be created"
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="slug",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="title",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 @OA\Property(
+     *                     property="content",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 @OA\Property(
+     *                     property="metadata",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="json"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 example={"slug": "blog-slug", "title": "Blog Title", "content": "Blog Content", "metadata": {"author": "string","image": "UUID from petshop.files"}}
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response="201",
@@ -105,7 +134,7 @@ class BlogController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/blogs/{uuid}",
+     *     path="/api/v1/blog/{uuid}",
      *     summary="Get a single blog by UUID",
      *     tags={"Blogs"},
      *     @OA\Parameter(
@@ -150,7 +179,7 @@ class BlogController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/blogs/{uuid}",
+     *     path="/api/v1/blog/{uuid}",
      *     summary="Update a blog",
      *     tags={"Blogs"},
      *     @OA\Parameter(
@@ -164,7 +193,37 @@ class BlogController extends Controller
      *         )
      *     ),
      *     @OA\RequestBody(
-     *         required=true
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="slug",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="title",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 @OA\Property(
+     *                     property="content",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 @OA\Property(
+     *                     property="metadata",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="json"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 example={"slug": "blog-slug", "title": "Blog Title", "content": "Blog Content", "metadata": {"author": "string","image": "UUID from petshop.files"}}
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response="200",
@@ -200,7 +259,7 @@ class BlogController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/blogs/{uuid}",
+     *     path="/api/v1/blog/{uuid}",
      *     summary="Delete a blog",
      *     tags={"Blogs"},
      *     @OA\Parameter(
