@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,9 +21,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Admin routes
 Route::group(['prefix' => 'v1/admin'], function() {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    
+    // Users endpoints/apis
+    Route::get('user-listing', [UserController::class, 'index']);
+    Route::put('user-edit/{uuid}', [UserController::class, 'update']);
+    Route::delete('user-delete/{uuid}', [UserController::class, 'destroy']);
+
+});
+
+// Main routes
+Route::group(['prefix' => 'v1/main'], function() {
+    // Blog endpoints/apis
+    Route::get('blogs', [BlogController::class, 'index']);
+    Route::post('blog/create', [BlogController::class, 'store']);
+    Route::get('blog/{uuid}', [BlogController::class, 'show']);
+    Route::put('blog/{uuid}', [BlogController::class, 'update']);
+    Route::delete('blog/{uuid}', [BlogController::class, 'destroy']);
+
 });
 
 Route::group(['middleware' => 'jwt', 'prefix' => 'v1'], function  () {
@@ -46,7 +66,7 @@ Route::group(['middleware' => 'jwt', 'prefix' => 'v1'], function  () {
     Route::put('order-status/{uuid}', [OrderStatusController::class, 'update']);
     Route::delete('order-status/{uuid}', [OrderStatusController::class, 'destroy']);
 
-    // Category endpoints/apis
+    // Brand endpoints/apis
     Route::get('brands', [BrandController::class, 'index']);
     Route::post('brand/create', [BrandController::class, 'store']);
     Route::get('brand/{uuid}', [BrandController::class, 'show']);
