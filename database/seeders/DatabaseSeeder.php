@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\OrderStatus;
+use BlogSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,5 +23,6 @@ class DatabaseSeeder extends Seeder
          $this->call(ProductSeeder::class);
          $this->call(OrderStatusSeeder::class);
          $this->call(UserSeeder::class);
+         $this->call(BlogSeeder::class);
     }
 }
