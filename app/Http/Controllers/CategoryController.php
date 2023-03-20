@@ -19,30 +19,42 @@ class CategoryController extends Controller
     public function __construct()
     {
         // Functions inside the authentication controller can not be accessed without having the valid token.
-        // $this->middleware('auth:api');
+        $this->middleware('jwt');
     }
 
     /**
      * @OA\Get(
-     *     path="/categories",
-     *     summary="Get all categories",
-     *     tags={"Categories"},
-     *     @OA\Response(
-     *         response="200",
-     *         description="Successful operation",
-     *         @OA\JsonContent(
-     *             @OA\Property(
-     *                 property="categories",
-     *                 type="array",
-     *                 @OA\Items(ref="#/components/schemas/Category")
-     *             )
-     *         )
-     *     )
+     *      path="/api/categories",
+     *      operationId="getCategoriesList",
+     *      summary="Get list of Categories",
+     *      description="Returns list of categories",
+     *      tags={"Categories"},
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      	  @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="categories",
+     *                  collectionFormat="multi"
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Categories not found"
+     *      )
      * )
      */
     public function index()
     {
         $categories = Category::all();
+
+        if (!$categories) {
+            return response()->json([
+                'error' => 'Categories not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         // Return response with message and data
         return response()->json([
@@ -57,8 +69,7 @@ class CategoryController extends Controller
      *     tags={"Categories"},
      *     @OA\RequestBody(
      *         required=true,
-     *         description="Category object that needs to be created",
-     *         @OA\JsonContent(ref="#/components/schemas/CategoryRequest")
+     *         description="Category object that needs to be created"
      *     ),
      *     @OA\Response(
      *         response="201",
@@ -112,8 +123,7 @@ class CategoryController extends Controller
      *         description="Successful operation",
      *         @OA\JsonContent(
      *             @OA\Property(
-     *                 property="category",
-     *                 ref="#/components/schemas/Category"
+     *                 property="category"
      *             )
      *         )
      *     ),
@@ -126,6 +136,12 @@ class CategoryController extends Controller
     public function show($uuid)
     {
         $category = Category::where('uuid', $uuid)->first();
+
+        if (!$category) {
+            return response()->json([
+                'error' => 'Category not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         return response()->json([
             'category' => $category
@@ -148,8 +164,7 @@ class CategoryController extends Controller
      *         )
      *     ),
      *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/CategoryRequest")
+     *         required=true
      *     ),
      *     @OA\Response(
      *         response="200",
@@ -164,6 +179,12 @@ class CategoryController extends Controller
     public function update(CategoryRequest $request, $uuid)
     {
         $category = Category::where('uuid', $uuid)->first();
+
+        if (!$category) {
+            return response()->json([
+                'error' => 'Category not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         //validate data
         $data = $request->validated();
@@ -205,6 +226,12 @@ class CategoryController extends Controller
     public function destroy($uuid)
     {
         $category = Category::where('uuid', $uuid)->first();
+
+        if (!$category) {
+            return response()->json([
+                'error' => 'Category not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         //  Delete the category
         $category->delete();
