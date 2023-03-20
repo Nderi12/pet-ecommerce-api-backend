@@ -113,25 +113,16 @@ class ProductTest extends TestCase
      *
      * @return void
      */
-    public function testProductRetrieval()
+    public function testGetSingleProduct()
     {
-        $category = Category::factory()->create();
-        $product = Product::factory()->create(['category_uuid' => $category->uuid]);
+        $product = Product::factory()->create();
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->getJwtToken(),
         ])->get('/api/v1/product/' . $product->uuid);
 
-        $product = [
-            'title' => $this->faker->sentence,
-            'price' => $this->faker->randomFloat(2, 10, 100),
-            'description' => $this->faker->paragraph,
-            'category_uuid' => $category->uuid,
-            'metadata' => ['key' => 'value']
-        ];
-
         $response->assertStatus(200);
-        $this->assertDatabaseHas('products', $product);
+        $this->assertDatabaseHas('products', $product->toArray());
     }
 
     /**
