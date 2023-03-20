@@ -111,12 +111,12 @@ class OrderStatusTest extends TestCase
     private function getJwtToken()
     {
         $user = \App\Models\User::factory()->create([
-            'email' => 'test@example.com',
+            'email' => 'admin8@buckhill.co.uk',
             'password' => bcrypt('password')
         ]);
     
         $response = $this->postJson('/api/v1/admin/login', [
-            'email' => 'test@example.com',
+            'email' => 'admin8@buckhill.co.uk',
             'password' => 'password'
         ]);
     
