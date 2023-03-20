@@ -53,7 +53,7 @@ class UserController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function update(UserRequest $request, $uuid)
+    public function update(Request $request, $uuid)
     {
         $user = User::where('uuid', $uuid)->first();
 
@@ -63,11 +63,8 @@ class UserController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
 
-        //validate data
-        $data = $request->validated();
-
         // Update the user data
-        $user->update($data);
+        $user->update($request->all());
 
         //Return response with message and data
         return response()->json([
