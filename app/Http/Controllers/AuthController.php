@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
 use Lcobucci\JWT\Encoding\JoseEncoder;
@@ -19,7 +20,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt', ['except' => ['login', 'register']]);
+        $this->middleware('jwt', ['except' => ['login', 'register', 'resetPassword']]);
     }
 
     /**
@@ -67,13 +68,13 @@ class AuthController extends Controller
             'address' => 'required',
             'password' => 'required|string|min:8',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors()
             ], 422);
         }
-    
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -81,13 +82,13 @@ class AuthController extends Controller
             'phone_number' => $request->phone_number,
             'password' => bcrypt($request->password),
         ]);
-    
+
         return response()->json([
             'message' => 'Successfully registered.',
             'user' => $user
         ], Response::HTTP_OK);
     }
-    
+
 
     /**
     * @OA\Post(
@@ -161,6 +162,32 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Successfully logged out.'
+        ], Response::HTTP_OK);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users',
+            'password' => 'required|string|confirmed',
+            'password_confirmation' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user->update(['password' => bcrypt($request->password)]);
+
+        $token = $this->issueToken($user->id);
+
+        return response()->json([
+            'message' => 'Password reset successfully.',
+            'token' => $token
         ], Response::HTTP_OK);
     }
 
