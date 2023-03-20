@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Blog;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -11,99 +12,100 @@ class BlogTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * Test for getting all categories via API.
+     * Test for getting all blogs via API.
      *
      * @return void
      */
-    public function testGetAllCategories()
+    public function testGetAllBlogs()
     {
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->getJwtToken(),
-        ])->get('/api/v1/categories');
+        ])->get('/api/v1/main/blogs');
 
         $response->assertStatus(200);
     }
 
     /**
-     * Test for creating a category via API.
+     * Test for creating a blog via API.
      *
      * @return void
      */
-    public function testCreateCategory()
+    public function testCreateBlog()
     {
-        $category = [
-            'slug' => 'test-category',
-            'title' => 'Test Category',
+        $blog = [
+            'slug' => 'test-blog',
+            'title' => 'Test Blog',
+            'description' => 'Test Blog Description',
         ];
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->getJwtToken(),
-        ])->post('/api/v1/category/create', $category);
+        ])->post('/api/v1/main/blog/create', $blog);
 
         $response->assertStatus(201);
-        $this->assertDatabaseHas('categories', $category);
+        $this->assertDatabaseHas('blogs', $blog);
     }
 
     /**
-     * Test for updating a category via API.
+     * Test for updating a blog via API.
      *
      * @return void
      */
-    public function testUpdateCategory()
+    public function testUpdateBlog()
     {
-        $category = Category::factory()->create();
+        $blog = Blog::factory()->create();
 
-        $updatedCategory = [
-            'slug' => 'updated-category',
-            'title' => 'Updated Category',
+        $updatedBlog = [
+            'slug' => 'updated-blog',
+            'title' => 'Updated Blog',
         ];
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->getJwtToken(),
-        ])->put('/api/v1/category/' . $category->uuid, $updatedCategory);
+        ])->put('/api/v1/main/blog/' . $blog->uuid, $updatedBlog);
 
         $response->assertStatus(200);
-        $this->assertDatabaseHas('categories', $updatedCategory);
-        $this->assertDatabaseMissing('categories', $category->toArray());
+        $this->assertDatabaseHas('blogs', $updatedBlog);
+        $this->assertDatabaseMissing('blogs', $blog->toArray());
     }
 
     /**
-     * Test for deleting a category via API.
+     * Test for deleting a blog via API.
      *
      * @return void
      */
-    public function testDeleteCategory()
+    public function testDeleteBlog()
     {
-        $category = Category::factory()->create();
+        $blog = Blog::factory()->create();
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->getJwtToken(),
-        ])->delete('/api/v1/category/' . $category->uuid);
+        ])->delete('/api/v1/main/blog/' . $blog->uuid);
 
         $response->assertStatus(200);
-        $this->assertDatabaseMissing('categories', $category->toArray());
+        $this->assertDatabaseMissing('blogs', $blog->toArray());
     }
 
     /**
-     * Test for getting a single category via API.
+     * Test for getting a single blog via API.
      *
      * @return void
      */
-    public function testGetSingleCategory()
+    public function testGetSingleBlog()
     {
-        $category = Category::factory()->create();
+        $blog = Blog::factory()->create();
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->getJwtToken(),
-        ])->get('/api/v1/category/' . $category->uuid);
+        ])->get('/api/v1/main/blog/' . $blog->uuid);
 
-        $category = [
-            'slug' => $category->slug,
-            'title' => $category->title,
+        $blog = [
+            'slug' => $blog->slug,
+            'title' => $blog->title,
         ];
 
         $response->assertStatus(200);
-        $this->assertDatabaseHas('categories', $category);
+        $this->assertDatabaseHas('blogs', $blog);
     }
 
     /**
