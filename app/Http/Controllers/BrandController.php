@@ -18,7 +18,7 @@ class BrandController extends Controller
      */
     public function __construct() {
         // Functions inside the authentication controller can not be accessed without having the valid token.
-        $this->middleware('auth:api');
+        $this->middleware('jwt');
     }
     
     /**
@@ -29,6 +29,12 @@ class BrandController extends Controller
     public function index()
     {
         $brands = Brand::all();
+
+        if (!$brands) {
+            return response()->json([
+                'error' => 'Brands not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         // Return response with message and data
         return response()->json([
@@ -49,15 +55,14 @@ class BrandController extends Controller
         // Create an empty brand
         $brand = Brand::make();
 
-        DB::transaction(function () use($data, $brand) {
-           // create a new brand from the validated data
-           $brand->create($data);
+        DB::transaction(function () use ($data, $brand) {
+            // create a new brand from the validated data
+            $brand->create($data);
         });
 
         // Return response with message and data
         return response()->json([
-            'message' => 'Brand created successfully!',
-            'brand' => $brand
+            'message' => 'Brand created successfully!'
         ], Response::HTTP_CREATED); // 201 response for created
     }
 
@@ -66,8 +71,16 @@ class BrandController extends Controller
      * 
      * @author Nderi Kamau <nderikamau1212@gmail.com>
      */
-    public function show(Brand $brand)
+    public function show($uuid)
     {
+        $brand = Brand::where('uuid', $uuid)->first();
+
+        if (!$brand) {
+            return response()->json([
+                'error' => 'Brand not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         return response()->json([
             'brand' => $brand
         ], Response::HTTP_OK);
@@ -78,12 +91,20 @@ class BrandController extends Controller
      * 
      * @author Nderi Kamau <nderikamau1212@gmail.com>
      */
-    public function update(BrandRequest $request, Brand $brand)
+    public function update(BrandRequest $request, $uuid)
     {
+        $brand = Brand::where('uuid', $uuid)->first();
+
+        if (!$brand) {
+            return response()->json([
+                'error' => 'Brand not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         //validate data
         $data = $request->validated();
 
-        // Update the brand data
+        // Update the $brand data
         $brand->update($data);
 
         //Return response with message and data
@@ -97,13 +118,21 @@ class BrandController extends Controller
      * 
      * @author Nderi Kamau <nderikamau1212@gmail.com>
      */
-    public function destroy(Brand $brand)
+    public function destroy($uuid)
     {
+        $brand = Brand::where('uuid', $uuid)->first();
+
+        if (!$brand) {
+            return response()->json([
+                'error' => 'Brand not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         //  Delete the brand
         $brand->delete();
 
         // Return response with message
-        return redirect()->back()->with([
+        return response()->json([
             'success' => 'Brand deleted successfully!'
         ], Response::HTTP_OK);
     }
