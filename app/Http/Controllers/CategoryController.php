@@ -24,7 +24,7 @@ class CategoryController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/categories",
+     *      path="/api/v1/categories",
      *      operationId="getCategoriesList",
      *      summary="Get list of Categories",
      *      description="Returns list of categories",
@@ -64,12 +64,27 @@ class CategoryController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/categories",
+     *     path="/api/v1/category/create",
      *     summary="Create a new category",
      *     tags={"Categories"},
      *     @OA\RequestBody(
-     *         required=true,
-     *         description="Category object that needs to be created"
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="slug",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="title",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 example={"slug": "category-slug", "title": "Category Title"}
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response="201",
@@ -105,7 +120,7 @@ class CategoryController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/categories/{uuid}",
+     *     path="/api/v1/category/{uuid}",
      *     summary="Get a single category by UUID",
      *     tags={"Categories"},
      *     @OA\Parameter(
@@ -150,7 +165,7 @@ class CategoryController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/categories/{uuid}",
+     *     path="/api/v1/category/{uuid}",
      *     summary="Update a category",
      *     tags={"Categories"},
      *     @OA\Parameter(
@@ -200,7 +215,7 @@ class CategoryController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/categories/{uuid}",
+     *     path="/api/v1/category/{uuid}",
      *     summary="Delete a category",
      *     tags={"Categories"},
      *     @OA\Parameter(

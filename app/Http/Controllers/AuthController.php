@@ -26,7 +26,7 @@ class AuthController extends Controller
      * Registers a new user
      *
      * @OA\Post(
-     *     path="/register",
+     *     path="/v1/admin/register",
      *     tags={"Authentication"},
      *     summary="Registers a new user",
      *     description="Registers a new user with the specified details",
@@ -91,7 +91,7 @@ class AuthController extends Controller
 
     /**
     * @OA\Post(
-    *     path="/api/login",
+    *     path="/api/v1/admin/login",
     *     summary="Logs in a user by providing email and password credentials",
     *     description="Logs in a user and retrieves an access token",
     *     tags={"Authentication"},

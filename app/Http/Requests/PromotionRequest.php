@@ -22,7 +22,7 @@ class PromotionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'min:3', 'max:191' ],
+            'title' => ['required', 'string', 'min:3' ],
             'content' => [ 'required', 'string', 'min:3' ],
             'metadata' => [ 'required' ],
         ];
