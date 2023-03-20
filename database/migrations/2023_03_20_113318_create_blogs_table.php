@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('uuid')->unique();
             $table->string('slug');
             $table->string('title');
-            $table->longText('description');
+            $table->longText('content');
+            $table->json('metadata');
             $table->timestamps();
         });
     }

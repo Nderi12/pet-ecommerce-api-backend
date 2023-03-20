@@ -179,7 +179,23 @@ class CategoryController extends Controller
      *         )
      *     ),
      *     @OA\RequestBody(
-     *         required=true
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="slug",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="title",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 example={"slug": "category-slug", "title": "Category Title"}
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response="200",

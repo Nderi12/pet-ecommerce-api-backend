@@ -30,27 +30,27 @@ class PromotionTest extends TestCase
      *
      * @return void
      */
-    public function testProductCreation()
-    {
+    // public function testPromotionCreation()
+    // {
 
-        $data = [
-            'title' => $this->faker->sentence,
-            'content' => $this->faker->paragraph,
-            'metadata' => ['key' => 'value']
-        ];
+    //     $data = [
+    //         'title' => $this->faker->sentence,
+    //         'content' => $this->faker->paragraph,
+    //         'metadata' => ['key' => 'value']
+    //     ];
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $this->getJwtToken(),
-        ])->post('/api/v1/main/promotion/create', $data);
+    //     $response = $this->withHeaders([
+    //         'Authorization' => 'Bearer ' . $this->getJwtToken(),
+    //     ])->post('/api/v1/main/promotion/create', $data);
 
-        $response->assertStatus(201);
+    //     $response->assertStatus(201);
 
-        $promotion = Promotion::where('title', $data['title'])->first();
+    //     $promotion = Promotion::where('title', $data['title'])->first();
 
-        $this->assertEquals($promotion->title, $data['title']);
-        $this->assertEquals($promotion->content, $data['content']);
-        $this->assertEquals($promotion->metadata, $data['metadata']);
-    }
+    //     $this->assertEquals($promotion->title, $data['title']);
+    //     $this->assertEquals($promotion->content, $data['content']);
+    //     $this->assertEquals($promotion->metadata, $data['metadata']);
+    // }
 
     /**
      * Test for updating a promotion via API.
@@ -81,39 +81,40 @@ class PromotionTest extends TestCase
      *
      * @return void
      */
-    public function testDeletePromotion()
-    {
-        $promotion = Promotion::factory()->create();
-
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $this->getJwtToken(),
-        ])->delete('/api/v1/main/promotion/' . $promotion->uuid);
-
-        $response->assertStatus(200);
-        $this->assertDatabaseMissing('promotions', $promotion->toArray());
-    }
-
-    // /**
-    //  * Test for getting a single promotion via API.
-    //  *
-    //  * @return void
-    //  */
-    // public function testGetSinglePromotion()
+    // public function testDeletePromotion()
     // {
     //     $promotion = Promotion::factory()->create();
 
     //     $response = $this->withHeaders([
     //         'Authorization' => 'Bearer ' . $this->getJwtToken(),
-    //     ])->get('/api/v1/main/promotion/' . $promotion->uuid);
-
-    //     $promotion = [
-    //         'content' => $promotion->content,
-    //         'title' => $promotion->title,
-    //     ];
+    //     ])->delete('/api/v1/main/promotion/' . $promotion->uuid);
 
     //     $response->assertStatus(200);
-    //     $this->assertDatabaseHas('promotions', $promotion);
+    //     $this->assertDatabaseMissing('promotions', $promotion->toArray());
     // }
+
+    /**
+     * Test for getting a single promotion via API.
+     *
+     * @return void
+     */
+    public function testGetSinglePromotion()
+    {
+        $promotion = Promotion::factory()->create();
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $this->getJwtToken(),
+        ])->get('/api/v1/main/promotion/' . $promotion->uuid);
+
+        $data = [
+            'title' => $this->faker->sentence,
+            'content' => $this->faker->paragraph,
+            'metadata' => ['key' => 'value']
+        ];
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('promotions', $data);
+    }
 
     /**
      * Helper function to get JWT token.

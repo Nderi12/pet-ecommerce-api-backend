@@ -24,7 +24,7 @@ class PromotionController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/promotions",
+     *      path="/api/v1/main/promotions",
      *      operationId="getPromotionsList",
      *      summary="Get list of Promotions",
      *      description="Returns list of promotions",
@@ -64,12 +64,41 @@ class PromotionController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/promotions",
+     *     path="/api/v1/main/promotion/create",
      *     summary="Create a new promotion",
      *     tags={"Promotions"},
      *     @OA\RequestBody(
-     *         required=true,
-     *         description="Promotion object that needs to be created"
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="slug",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="title",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 @OA\Property(
+     *                     property="content",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 @OA\Property(
+     *                     property="metadata",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="json"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 example={"slug": "promotion-slug", "title": "Promotion Title", "content": "Promotion Content", "metadata": {"valid_from": "date(Y-m-d)", "valid_to": "date(Y-m-d)",   "image": "UUID from petshop.files"}}
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response="201",
@@ -92,9 +121,9 @@ class PromotionController extends Controller
         // Create an empty promotion
         $promotion = Promotion::make();
 
-        DB::transaction(function () use ($data, $promotion) {
-            // create a new promotion from the validated data
-            $promotion->create($data);
+        DB::transaction(function () use ($request, $promotion) {
+            // create a new promotion from the validated request
+            $promotion->create($request->all());
         });
 
         // Return response with message and data
@@ -105,7 +134,7 @@ class PromotionController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/promotions/{uuid}",
+     *     path="/api/v1/main/promotion/{uuid}",
      *     summary="Get a single promotion by UUID",
      *     tags={"Promotions"},
      *     @OA\Parameter(
@@ -150,7 +179,7 @@ class PromotionController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/promotions/{uuid}",
+     *     path="/api/v1/main/promotion/{uuid}",
      *     summary="Update a promotion",
      *     tags={"Promotions"},
      *     @OA\Parameter(
@@ -164,7 +193,37 @@ class PromotionController extends Controller
      *         )
      *     ),
      *     @OA\RequestBody(
-     *         required=true
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="slug",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="title",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 @OA\Property(
+     *                     property="content",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 @OA\Property(
+     *                     property="metadata",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="json"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 example={"slug": "promotion-slug", "title": "Promotion Title", "content": "Promotion Content", "metadata": {"valid_from": "date(Y-m-d)", "valid_to": "date(Y-m-d)",   "image": "UUID from petshop.files"}}
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response="200",
@@ -200,7 +259,7 @@ class PromotionController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/promotions/{uuid}",
+     *     path="/api/v1/main/promotion/{uuid}",
      *     summary="Delete a promotion",
      *     tags={"Promotions"},
      *     @OA\Parameter(

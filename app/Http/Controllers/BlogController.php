@@ -134,7 +134,7 @@ class BlogController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/blog/{uuid}",
+     *     path="/api/v1/main/blog/{uuid}",
      *     summary="Get a single blog by UUID",
      *     tags={"Blogs"},
      *     @OA\Parameter(
@@ -179,7 +179,7 @@ class BlogController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/v1/blog/{uuid}",
+     *     path="/api/v1/main/blog/{uuid}",
      *     summary="Update a blog",
      *     tags={"Blogs"},
      *     @OA\Parameter(
@@ -259,7 +259,7 @@ class BlogController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/v1/blog/{uuid}",
+     *     path="/api/v1/main/blog/{uuid}",
      *     summary="Delete a blog",
      *     tags={"Blogs"},
      *     @OA\Parameter(
