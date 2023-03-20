@@ -18,11 +18,11 @@ class UserSeeder extends Seeder
         DB::transaction(function () {
             $user = User::create([
                 'name' => 'Admin user',
-                'email' => 'admin@demo.com',
+                'email' => 'admin1@buckhill.co.uk',
                 'phone_number' => '254722890101',
                 'address' => 'This is a sample address',
                 'email_verified_at' => now(),
-                'password' => Hash::make('password'),
+                'password' => Hash::make('userpassword'),
             ]);
         });
     }

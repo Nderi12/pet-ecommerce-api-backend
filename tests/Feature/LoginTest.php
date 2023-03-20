@@ -16,12 +16,12 @@ class LoginTest extends TestCase
     public function testUserCanLogin()
     {
         $user = \App\Models\User::factory()->create([
-            'email' => 'test@example.com',
+            'email' => 'admin7@buckhill.co.uk',
             'password' => bcrypt('password')
         ]);
     
         $response = $this->postJson('/api/v1/admin/login', [
-            'email' => 'test@example.com',
+            'email' => 'admin7@buckhill.co.uk',
             'password' => 'password'
         ]);
     

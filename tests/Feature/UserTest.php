@@ -77,12 +77,12 @@ class UserTest extends TestCase
     private function getJwtToken()
     {
         $user = \App\Models\User::factory()->create([
-            'email' => 'test@example.com',
+            'email' => 'admin@demo.com',
             'password' => bcrypt('password')
         ]);
     
         $response = $this->postJson('/api/v1/admin/login', [
-            'email' => 'test@example.com',
+            'email' => 'admin@demo.com',
             'password' => 'password'
         ]);
     

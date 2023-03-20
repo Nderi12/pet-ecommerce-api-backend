@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'v1/admin'], function() {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/reset-password-token', [AuthController::class, 'resetPassword']);
     
     // Users endpoints/apis
     Route::get('user-listing', [UserController::class, 'index']);
