@@ -20,7 +20,8 @@ class BlogFactory extends Factory
             'uuid' => $this->faker->uuid(),
             'slug' => $this->faker->slug(),
             'title' => $this->faker->sentence(),
-            'description' => $this->faker->sentence(),
+            'content' => $this->faker->sentence(),
+            'metadata' => ['key' => 'value'],
         ];
     }
 }

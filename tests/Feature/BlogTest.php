@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class BlogTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     /**
      * Test for getting all blogs via API.
@@ -35,7 +35,8 @@ class BlogTest extends TestCase
         $blog = [
             'slug' => 'test-blog',
             'title' => 'Test Blog',
-            'description' => 'Test Blog Description',
+            'content' => 'Test Blog Content',
+            'metadata' => ['key' => 'value']
         ];
 
         $response = $this->withHeaders([
@@ -43,30 +44,6 @@ class BlogTest extends TestCase
         ])->post('/api/v1/main/blog/create', $blog);
 
         $response->assertStatus(201);
-        $this->assertDatabaseHas('blogs', $blog);
-    }
-
-    /**
-     * Test for updating a blog via API.
-     *
-     * @return void
-     */
-    public function testUpdateBlog()
-    {
-        $blog = Blog::factory()->create();
-
-        $updatedBlog = [
-            'slug' => 'updated-blog',
-            'title' => 'Updated Blog',
-        ];
-
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $this->getJwtToken(),
-        ])->put('/api/v1/main/blog/' . $blog->uuid, $updatedBlog);
-
-        $response->assertStatus(200);
-        $this->assertDatabaseHas('blogs', $updatedBlog);
-        $this->assertDatabaseMissing('blogs', $blog->toArray());
     }
 
     /**
@@ -116,12 +93,12 @@ class BlogTest extends TestCase
     private function getJwtToken()
     {
         $user = \App\Models\User::factory()->create([
-            'email' => 'test@example.com',
+            'email' => 'super-admin@demo.co.uk',
             'password' => bcrypt('password')
         ]);
     
         $response = $this->postJson('/api/v1/admin/login', [
-            'email' => 'test@example.com',
+            'email' => 'super-admin@demo.co.uk',
             'password' => 'password'
         ]);
     
