@@ -78,7 +78,6 @@ The following models are available in the system:
 ### Dependencies
 
 - jwt-auth - For authentication using JSON Web Tokens
-- laravel-cors - For handling Cross-Origin Resource Sharing (CORS)
 
 ### Folders
 
