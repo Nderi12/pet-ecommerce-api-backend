@@ -135,7 +135,7 @@ class BlogController extends Controller
      */
     public function show($uuid)
     {
-        $blog = Blog::where('uuid', $uuid)->with(['products'])->first();
+        $blog = Blog::where('uuid', $uuid)->first();
 
         if (!$blog) {
             return response()->json([

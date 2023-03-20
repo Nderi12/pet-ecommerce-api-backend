@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
 use DateTimeImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -136,6 +137,10 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+
+            $user->update([
+                'last_logged_in' => Carbon::now()
+            ]);
 
             $token = $this->issueToken($user->id);
 
