@@ -22,9 +22,28 @@ class BrandController extends Controller
     }
     
     /**
-     * Display a listing of the resource.
-     * 
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
+     * @OA\Get(
+     *      path="/api/v1/brands",
+     *      operationId="getBrandsList",
+     *      summary="Get list of Brands",
+     *      description="Returns list of brands",
+     *      tags={"Brands"},
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      	  @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="brands",
+     *                  collectionFormat="multi"
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Brands not found"
+     *      )
+     * )
      */
     public function index()
     {
@@ -43,9 +62,41 @@ class BrandController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     * 
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
+     * @OA\Post(
+     *     path="/api/v1/brand/create",
+     *     summary="Create a new brand",
+     *     tags={"Brands"},
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="slug",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="title",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 example={"slug": "brand-slug", "title": "Brand Title"}
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="201",
+     *         description="Brand created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 description="A message indicating that the brand was created successfully."
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function store(BrandRequest $request)
     {
@@ -67,9 +118,34 @@ class BrandController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     * 
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
+     * @OA\Get(
+     *     path="/api/v1/brand/{uuid}",
+     *     summary="Get a single brand by UUID",
+     *     tags={"Brands"},
+     *     @OA\Parameter(
+     *         name="uuid",
+     *         in="path",
+     *         description="UUID of the brand to get",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             format="uuid"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="brand"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Brand not found"
+     *     )
+     * )
      */
     public function show($uuid)
     {
@@ -87,9 +163,32 @@ class BrandController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     * 
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
+     * @OA\Put(
+     *     path="/api/v1/brand/{uuid}",
+     *     summary="Update a brand",
+     *     tags={"Brands"},
+     *     @OA\Parameter(
+     *         name="uuid",
+     *         in="path",
+     *         description="The UUID of the brand to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             format="uuid"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Brand updated successfully"
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Brand not found"
+     *     )
+     * )
      */
     public function update(BrandRequest $request, $uuid)
     {
@@ -114,9 +213,29 @@ class BrandController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     * 
-     * @author Nderi Kamau <nderikamau1212@gmail.com>
+     * @OA\Delete(
+     *     path="/api/v1/brand/{uuid}",
+     *     summary="Delete a brand",
+     *     tags={"Brands"},
+     *     @OA\Parameter(
+     *         name="uuid",
+     *         in="path",
+     *         description="The UUID of the brand to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             format="uuid"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Brand deleted successfully"
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Brand not found"
+     *     )
+     * )
      */
     public function destroy($uuid)
     {

@@ -66,7 +66,7 @@ class BlogController extends Controller
      * @OA\Post(
      *     path="/api/v1/main/blog/create",
      *     summary="Create a new blog",
-     *     tags={"Blog"},
+     *     tags={"Blogs"},
      *     @OA\RequestBody(
      *         @OA\MediaType(
      *             mediaType="application/json",
