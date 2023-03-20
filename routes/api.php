@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\ProductController;
@@ -44,4 +45,11 @@ Route::group(['middleware' => 'jwt', 'prefix' => 'v1'], function  () {
     Route::get('order-status/{uuid}', [OrderStatusController::class, 'show']);
     Route::put('order-status/{uuid}', [OrderStatusController::class, 'update']);
     Route::delete('order-status/{uuid}', [OrderStatusController::class, 'destroy']);
+
+    // Category endpoints/apis
+    Route::get('brands', [BrandController::class, 'index']);
+    Route::post('brand/create', [BrandController::class, 'store']);
+    Route::get('brand/{uuid}', [BrandController::class, 'show']);
+    Route::put('brand/{uuid}', [BrandController::class, 'update']);
+    Route::delete('brand/{uuid}', [BrandController::class, 'destroy']);
 });
