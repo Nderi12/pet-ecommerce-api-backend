@@ -16,7 +16,7 @@ class ProductFactory extends Factory
             'price' => $this->faker->randomFloat(2, 10, 100),
             'description' => $this->faker->paragraph(),
             'category_uuid' => $this->faker->uuid(),
-            'metadata' => ['key' => 'value'],
+            // 'metadata' => ['key' => 'value'],
         ];
     }
 }

@@ -96,8 +96,7 @@ class ProductController extends Controller
      *                     	   @OA\Schema(type="integer"),
      *                     }
      *                 ),
-     *                 example={"slug": "product-slug", "title": "Product Title", "content": "Product Content", "metadata": {"brand": "UUID from petshop.brands","image": "UUID from petshop.files"
-}}
+     *                 example={"slug": "product-slug", "title": "Product Title", "content": "Product Content", "metadata": {"brand": "UUID from petshop.brands","image": "UUID  petshop.files"}}
      *             )
      *         )
      *     ),
@@ -222,8 +221,7 @@ class ProductController extends Controller
      *                     	   @OA\Schema(type="integer"),
      *                     }
      *                 ),
-     *                 example={"slug": "product-slug", "title": "Product Title", "content": "Product Content", "metadata": {"brand": "UUID from petshop.brands","image": "UUID from petshop.files"
-}}
+     *                 example={"slug": "product-slug", "title": "Product Title", "content": "Product Content", "metadata": {"brand": "UUID from petshop.brands","image": "UUID from petshop.files"}}
      *             )
      *         )
      *     ),

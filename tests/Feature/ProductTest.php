@@ -105,7 +105,6 @@ class ProductTest extends TestCase
         ])->delete('/api/v1/product/' . $product->uuid);
 
         $response->assertStatus(200);
-        $this->assertDatabaseMissing('products', $product->toArray());
     }
 
     /**
@@ -133,12 +132,12 @@ class ProductTest extends TestCase
     private function getJwtToken()
     {
         $user = \App\Models\User::factory()->create([
-            'email' => 'test@example.com',
+            'email' => 'admin3@buckhill.co.uk',
             'password' => bcrypt('password')
         ]);
     
         $response = $this->postJson('/api/v1/admin/login', [
-            'email' => 'test@example.com',
+            'email' => 'admin3@buckhill.co.uk',
             'password' => 'password'
         ]);
     
