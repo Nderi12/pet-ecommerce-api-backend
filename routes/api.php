@@ -6,6 +6,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +43,12 @@ Route::group(['prefix' => 'v1/main'], function() {
     Route::put('blog/{uuid}', [BlogController::class, 'update']);
     Route::delete('blog/{uuid}', [BlogController::class, 'destroy']);
 
+    // Promotion endpoints/apis
+    Route::get('promotions', [PromotionController::class, 'index']);
+    Route::post('promotion/create', [PromotionController::class, 'store']);
+    Route::get('promotion/{uuid}', [PromotionController::class, 'show']);
+    Route::put('promotion/{uuid}', [PromotionController::class, 'update']);
+    Route::delete('promotion/{uuid}', [PromotionController::class, 'destroy']);
 });
 
 Route::group(['middleware' => 'jwt', 'prefix' => 'v1'], function  () {
