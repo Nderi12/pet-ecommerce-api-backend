@@ -8,7 +8,6 @@ use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,20 +22,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Admin routes
-Route::group(['prefix' => 'v1/admin'], function() {
+Route::group(['prefix' => 'v1/admin'], function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/reset-password-token', [AuthController::class, 'resetPassword']);
-    
+
     // Users endpoints/apis
     Route::get('user-listing', [UserController::class, 'index']);
     Route::put('user-edit/{uuid}', [UserController::class, 'update']);
     Route::delete('user-delete/{uuid}', [UserController::class, 'destroy']);
-
 });
 
 // Main routes
-Route::group(['prefix' => 'v1/main'], function() {
+Route::group(['prefix' => 'v1/main'], function () {
     // Blog endpoints/apis
     Route::get('blogs', [BlogController::class, 'index']);
     Route::post('blog/create', [BlogController::class, 'store']);
@@ -52,7 +50,7 @@ Route::group(['prefix' => 'v1/main'], function() {
     Route::delete('promotion/{uuid}', [PromotionController::class, 'destroy']);
 });
 
-Route::group(['middleware' => 'jwt', 'prefix' => 'v1'], function  () {
+Route::group(['middleware' => 'jwt', 'prefix' => 'v1'], function () {
     // Category endpoints/apis
     Route::get('categories', [CategoryController::class, 'index']);
     Route::post('category/create', [CategoryController::class, 'store']);

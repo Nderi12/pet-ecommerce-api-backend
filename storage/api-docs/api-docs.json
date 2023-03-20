@@ -1090,7 +1090,7 @@
                                     "content": "Product Content",
                                     "metadata": {
                                         "brand": "UUID from petshop.brands",
-                                        "image": "UUID from petshop.files"
+                                        "image": "UUID  petshop.files"
                                     }
                                 }
                             }
