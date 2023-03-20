@@ -13,6 +13,7 @@ class Promotion extends Model
     protected $fillable = [
         'title',
         'content',
+        'metadata'
     ];
 
     protected $casts = [

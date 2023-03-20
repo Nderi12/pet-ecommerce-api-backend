@@ -135,7 +135,7 @@ class PromotionController extends Controller
      */
     public function show($uuid)
     {
-        $promotion = Promotion::where('uuid', $uuid)->with(['products'])->first();
+        $promotion = Promotion::where('uuid', $uuid)->first();
 
         if (!$promotion) {
             return response()->json([
