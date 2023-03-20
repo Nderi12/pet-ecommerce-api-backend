@@ -127,7 +127,7 @@ class ProductController extends Controller
      */
     public function show($uuid)
     {
-        $product = Product::where('uuid', $uuid)->first();
+        $product = Product::where('uuid', $uuid)->with(['category'])->first();
 
         if (!$product) {
             return response()->json([

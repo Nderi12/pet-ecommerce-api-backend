@@ -31,4 +31,9 @@ class Product extends Model
     protected $casts = [
         'metadata' => 'json',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_uuid', 'uuid');
+    }
 }

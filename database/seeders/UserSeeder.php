@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         DB::transaction(function () {
             $user = User::create([
                 'name' => 'Admin user',
-                'email' => 'tspkeymanager1@gmail.com',
+                'email' => 'admin@demo.com',
                 'phone_number' => '254722890101',
                 'address' => 'This is a sample address',
                 'email_verified_at' => now(),
