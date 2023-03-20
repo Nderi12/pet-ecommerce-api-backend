@@ -42,7 +42,7 @@ class BranchTest extends TestCase
         ])->post('/api/v1/brand/create', $brand);
 
         $response->assertStatus(201);
-        $this->assertDatabaseHas('categories', $brand);
+        $this->assertDatabaseHas('brands', $brand);
     }
 
     /**
@@ -64,8 +64,8 @@ class BranchTest extends TestCase
         ])->put('/api/v1/brand/' . $brand->uuid, $updatedBrand);
 
         $response->assertStatus(200);
-        $this->assertDatabaseHas('categories', $updatedBrand);
-        $this->assertDatabaseMissing('categories', $brand->toArray());
+        $this->assertDatabaseHas('brands', $updatedBrand);
+        $this->assertDatabaseMissing('brands', $brand->toArray());
     }
 
     /**
@@ -82,7 +82,7 @@ class BranchTest extends TestCase
         ])->delete('/api/v1/brand/' . $brand->uuid);
 
         $response->assertStatus(200);
-        $this->assertDatabaseMissing('categories', $brand->toArray());
+        $this->assertDatabaseMissing('brands', $brand->toArray());
     }
 
     /**
@@ -104,7 +104,7 @@ class BranchTest extends TestCase
         ];
 
         $response->assertStatus(200);
-        $this->assertDatabaseHas('categories', $brand);
+        $this->assertDatabaseHas('brands', $brand);
     }
 
     /**
