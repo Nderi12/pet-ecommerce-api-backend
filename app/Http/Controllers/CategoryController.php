@@ -135,7 +135,7 @@ class CategoryController extends Controller
      */
     public function show($uuid)
     {
-        $category = Category::where('uuid', $uuid)->first();
+        $category = Category::where('uuid', $uuid)->with(['products'])->first();
 
         if (!$category) {
             return response()->json([
