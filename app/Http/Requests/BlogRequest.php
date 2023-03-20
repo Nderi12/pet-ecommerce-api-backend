@@ -24,7 +24,8 @@ class BlogRequest extends FormRequest
         return [
             'slug' => [ 'string', 'min:3', 'max:191' ],
             'title' => [ 'string', 'min:3', 'max:191' ],
-            'description' => [ 'string', 'min:3' ],
+            'content' => [ 'string', 'min:3' ],
+            'metadata' => [ 'required' ],
         ];
     }
 }

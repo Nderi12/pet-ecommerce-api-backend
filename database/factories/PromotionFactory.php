@@ -17,7 +17,10 @@ class PromotionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'uuid' => $this->faker->uuid(),
+            'title' => $this->faker->sentence(),
+            'content' => $this->faker->sentence(),
+            'metadata' => ['key' => 'value'],
         ];
     }
 }
