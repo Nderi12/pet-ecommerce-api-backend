@@ -8,12 +8,11 @@ use DateTimeImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
 use Lcobucci\JWT\Encoding\JoseEncoder;
-use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token\Builder;
 
 class AuthController extends Controller
@@ -71,7 +70,7 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -85,42 +84,41 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Successfully registered.',
-            'user' => $user
+            'user' => $user,
         ], Response::HTTP_OK);
     }
 
-
     /**
-    * @OA\Post(
-    *     path="/api/v1/admin/login",
-    *     summary="Logs in a user by providing email and password credentials",
-    *     description="Logs in a user and retrieves an access token",
-    *     tags={"Authentication"},
-    *     @OA\Response(
-    *         response="200",
-    *         description="User logged in successfuly",
-    *         @OA\JsonContent(
-    *             @OA\Property(property="message", type="string", example="Successfully logged in."),
-    *             @OA\Property(property="token", type="string", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImZhNjViODlk...[jwt access token]")
-    *         )
-    *     ),
-    *     @OA\Response(
-    *         response="401",
-    *         description="Invalid email or password",
-    *         @OA\JsonContent(
-    *             @OA\Property(property="message", type="string", example="Invalid email or password.")
-    *         )
-    *     ),
-    *     @OA\RequestBody(
-    *         description="The credential details of the user",
-    *         required=true,
-    *         @OA\JsonContent(
-    *             @OA\Property(property="email", type="string", example="john_doe@example.com"),
-    *             @OA\Property(property="password", type="string", example="password")
-    *         )
-    *     )
-    * )
-    */
+     * @OA\Post(
+     *     path="/api/v1/admin/login",
+     *     summary="Logs in a user by providing email and password credentials",
+     *     description="Logs in a user and retrieves an access token",
+     *     tags={"Authentication"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="User logged in successfuly",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Successfully logged in."),
+     *             @OA\Property(property="token", type="string", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImZhNjViODlk...[jwt access token]")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="401",
+     *         description="Invalid email or password",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Invalid email or password.")
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         description="The credential details of the user",
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="email", type="string", example="john_doe@example.com"),
+     *             @OA\Property(property="password", type="string", example="password")
+     *         )
+     *     )
+     * )
+     */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -130,7 +128,7 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -140,19 +138,19 @@ class AuthController extends Controller
             $user = Auth::user();
 
             $user->update([
-                'last_logged_in' => Carbon::now()
+                'last_logged_in' => Carbon::now(),
             ]);
 
             $token = $this->issueToken($user->id);
 
             return response()->json([
                 'message' => 'Successfully logged in.',
-                'token' => $token
+                'token' => $token,
             ], Response::HTTP_OK);
         }
 
         return response()->json([
-            'message' => 'Invalid email or password.'
+            'message' => 'Invalid email or password.',
         ], 401);
     }
 
@@ -161,7 +159,7 @@ class AuthController extends Controller
         $request->user()->tokens()->delete();
 
         return response()->json([
-            'message' => 'Successfully logged out.'
+            'message' => 'Successfully logged out.',
         ], Response::HTTP_OK);
     }
 
@@ -172,12 +170,12 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|exists:users',
             'password' => 'required|string|confirmed',
-            'password_confirmation' => 'required'
+            'password_confirmation' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -187,17 +185,17 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Password reset successfully.',
-            'token' => $token
+            'token' => $token,
         ], Response::HTTP_OK);
     }
 
     public function issueToken($user_id)
     {
         $tokenBuilder = (new Builder(new JoseEncoder(), ChainedFormatter::default()));
-        $algorithm    = new Sha256();
-        $signingKey   = InMemory::plainText(random_bytes(32));
+        $algorithm = new Sha256();
+        $signingKey = InMemory::plainText(random_bytes(32));
 
-        $now   = new DateTimeImmutable();
+        $now = new DateTimeImmutable();
         $token = $tokenBuilder
             // Configures the issuer (iss claim)
             ->issuedBy(config('app.url'))
