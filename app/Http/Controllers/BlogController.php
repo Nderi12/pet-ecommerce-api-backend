@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CategoryRequest;
-use App\Models\Category;
+use App\Http\Requests\BlogRequest;
+use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
-class CategoryController extends Controller
+class BlogController extends Controller
 {
     /**
      * Create a new AuthController instance.
@@ -24,49 +24,49 @@ class CategoryController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/v1/categories",
-     *      operationId="getCategoriesList",
-     *      summary="Get list of Categories",
-     *      description="Returns list of categories",
-     *      tags={"Categories"},
+     *      path="/api/v1/main/blogs",
+     *      operationId="getBlogsList",
+     *      summary="Get list of Blogs",
+     *      description="Returns list of blogs",
+     *      tags={"Blogs"},
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
      *      	  @OA\JsonContent(
      *              type="object",
      *              @OA\Property(
-     *                  property="categories",
+     *                  property="blogs",
      *                  collectionFormat="multi"
      *              )
      *          )
      *      ),
      *      @OA\Response(
      *          response=404,
-     *          description="Categories not found"
+     *          description="Blogs not found"
      *      )
      * )
      */
     public function index()
     {
-        $categories = Category::all();
+        $blogs = Blog::all();
 
-        if (!$categories) {
+        if (!$blogs) {
             return response()->json([
-                'error' => 'Categories not found'
+                'error' => 'Blogs not found'
             ], Response::HTTP_NOT_FOUND);
         }
 
         // Return response with message and data
         return response()->json([
-            'categories' => $categories
+            'blogs' => $blogs
         ], Response::HTTP_OK);
     }
 
     /**
      * @OA\Post(
-     *     path="/api/v1/category/create",
-     *     summary="Create a new category",
-     *     tags={"Categories"},
+     *     path="/api/v1/main/blog/create",
+     *     summary="Create a new blog",
+     *     tags={"Blogs"},
      *     @OA\RequestBody(
      *         @OA\MediaType(
      *             mediaType="application/json",
@@ -82,51 +82,65 @@ class CategoryController extends Controller
      *                     	   @OA\Schema(type="integer"),
      *                     }
      *                 ),
-     *                 example={"slug": "category-slug", "title": "Category Title"}
+     *                 @OA\Property(
+     *                     property="content",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 @OA\Property(
+     *                     property="metadata",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="json"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 example={"slug": "blog-slug", "title": "Blog Title", "content": "Blog Content", "metadata": {"author": "string","image": "UUID from petshop.files"}}
      *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response="201",
-     *         description="Category created successfully",
+     *         description="Blog created successfully",
      *         @OA\JsonContent(
      *             @OA\Property(
      *                 property="message",
      *                 type="string",
-     *                 description="A message indicating that the category was created successfully."
+     *                 description="A message indicating that the blog was created successfully."
      *             )
      *         )
      *     )
      * )
      */
-    public function store(CategoryRequest $request)
+    public function store(BlogRequest $request)
     {
         // Get the data from the request
         $data = $request->validated();
 
-        // Create an empty category
-        $category = Category::make();
+        // Create an empty blog
+        $blog = Blog::make();
 
-        DB::transaction(function () use ($data, $category) {
-            // create a new category from the validated data
-            $category->create($data);
+        DB::transaction(function () use ($data, $blog) {
+            // create a new blog from the validated data
+            $blog->create($data);
         });
 
         // Return response with message and data
         return response()->json([
-            'message' => 'Category created successfully!'
+            'message' => 'Blog created successfully!'
         ], Response::HTTP_CREATED); // 201 response for created
     }
 
     /**
      * @OA\Get(
-     *     path="/api/v1/category/{uuid}",
-     *     summary="Get a single category by UUID",
-     *     tags={"Categories"},
+     *     path="/api/v1/main/blog/{uuid}",
+     *     summary="Get a single blog by UUID",
+     *     tags={"Blogs"},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
-     *         description="UUID of the category to get",
+     *         description="UUID of the blog to get",
      *         required=true,
      *         @OA\Schema(
      *             type="string",
@@ -138,40 +152,40 @@ class CategoryController extends Controller
      *         description="Successful operation",
      *         @OA\JsonContent(
      *             @OA\Property(
-     *                 property="category"
+     *                 property="blog"
      *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response="404",
-     *         description="Category not found"
+     *         description="Blog not found"
      *     )
      * )
      */
     public function show($uuid)
     {
-        $category = Category::where('uuid', $uuid)->with(['products'])->first();
+        $blog = Blog::where('uuid', $uuid)->first();
 
-        if (!$category) {
+        if (!$blog) {
             return response()->json([
-                'error' => 'Category not found'
+                'error' => 'Blog not found'
             ], Response::HTTP_NOT_FOUND);
         }
 
         return response()->json([
-            'category' => $category
+            'blog' => $blog
         ], Response::HTTP_OK);
     }
 
     /**
      * @OA\Put(
-     *     path="/api/v1/category/{uuid}",
-     *     summary="Update a category",
-     *     tags={"Categories"},
+     *     path="/api/v1/main/blog/{uuid}",
+     *     summary="Update a blog",
+     *     tags={"Blogs"},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
-     *         description="The UUID of the category to update",
+     *         description="The UUID of the blog to update",
      *         required=true,
      *         @OA\Schema(
      *             type="string",
@@ -193,51 +207,65 @@ class CategoryController extends Controller
      *                     	   @OA\Schema(type="integer"),
      *                     }
      *                 ),
-     *                 example={"slug": "category-slug", "title": "Category Title"}
+     *                 @OA\Property(
+     *                     property="content",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 @OA\Property(
+     *                     property="metadata",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="json"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 example={"slug": "blog-slug", "title": "Blog Title", "content": "Blog Content", "metadata": {"author": "string","image": "UUID from petshop.files"}}
      *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response="200",
-     *         description="Category updated successfully"
+     *         description="Blog updated successfully"
      *     ),
      *     @OA\Response(
      *         response="404",
-     *         description="Category not found"
+     *         description="Blog not found"
      *     )
      * )
      */
-    public function update(CategoryRequest $request, $uuid)
+    public function update(BlogRequest $request, $uuid)
     {
-        $category = Category::where('uuid', $uuid)->first();
+        $blog = Blog::where('uuid', $uuid)->first();
 
-        if (!$category) {
+        if (!$blog) {
             return response()->json([
-                'error' => 'Category not found'
+                'error' => 'Blog not found'
             ], Response::HTTP_NOT_FOUND);
         }
 
         //validate data
         $data = $request->validated();
 
-        // Update the category data
-        $category->update($data);
+        // Update the blog data
+        $blog->update($data);
 
         //Return response with message and data
         return response()->json([
-            'success' => 'Category updated successfully!'
+            'success' => 'Blog updated successfully!'
         ], Response::HTTP_OK);
     }
 
     /**
      * @OA\Delete(
-     *     path="/api/v1/category/{uuid}",
-     *     summary="Delete a category",
-     *     tags={"Categories"},
+     *     path="/api/v1/main/blog/{uuid}",
+     *     summary="Delete a blog",
+     *     tags={"Blogs"},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
-     *         description="The UUID of the category to delete",
+     *         description="The UUID of the blog to delete",
      *         required=true,
      *         @OA\Schema(
      *             type="string",
@@ -246,30 +274,30 @@ class CategoryController extends Controller
      *     ),
      *     @OA\Response(
      *         response="200",
-     *         description="Category deleted successfully"
+     *         description="Blog deleted successfully"
      *     ),
      *     @OA\Response(
      *         response="404",
-     *         description="Category not found"
+     *         description="Blog not found"
      *     )
      * )
      */
     public function destroy($uuid)
     {
-        $category = Category::where('uuid', $uuid)->first();
+        $blog = Blog::where('uuid', $uuid)->first();
 
-        if (!$category) {
+        if (!$blog) {
             return response()->json([
-                'error' => 'Category not found'
+                'error' => 'Blog not found'
             ], Response::HTTP_NOT_FOUND);
         }
 
-        //  Delete the category
-        $category->delete();
+        //  Delete the blog
+        $blog->delete();
 
         // Return response with message
         return response()->json([
-            'success' => 'Category deleted successfully!'
+            'success' => 'Blog deleted successfully!'
         ], Response::HTTP_OK);
     }
 }

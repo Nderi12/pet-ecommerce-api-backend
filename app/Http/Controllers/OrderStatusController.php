@@ -23,37 +23,26 @@ class OrderStatusController extends Controller
     
     /**
      * @OA\Get(
-     *     path="/api/order-statuses",
-     *     summary="Get all order statuses",
-     *     description="Retrieve a list of all available order statuses.",
-     *     tags={"Order Statuses"},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="Order statuses list"
-     *             ),
-     *             @OA\Property(
-     *                 property="orderStatuses"
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Order statuses not found",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="error",
-     *                 type="string",
-     *                 example="Order statuses not found"
-     *             )
-     *         )
-     *     )
+     *      path="/api/v1/orderStatuses",
+     *      operationId="getOrderStatusesList",
+     *      summary="Get list of OrderStatuses",
+     *      description="Returns list of orderStatuses",
+     *      tags={"OrderStatuses"},
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      	  @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="orderStatuses",
+     *                  collectionFormat="multi"
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="OrderStatuses not found"
+     *      )
      * )
      */
     public function index()
@@ -75,44 +64,37 @@ class OrderStatusController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/order-statuses",
-     *     summary="Create a new order status",
-     *     description="Create a new order status from the given data.",
-     *     tags={"Order Statuses"},
+     *     path="/api/v1/orderStatus/create",
+     *     summary="Create a new orderStatus",
+     *     tags={"OrderStatuses"},
      *     @OA\RequestBody(
-     *         required=true,
-     *         description="Data for creating a new order status"
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="Order status created successfully",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="Order status created successfully!"
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="title",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 example={"title": "OrderStatus Title"}
      *             )
      *         )
      *     ),
      *     @OA\Response(
-     *         response=422,
-     *         description="Validation errors",
+     *         response="201",
+     *         description="OrderStatus created successfully",
      *         @OA\JsonContent(
-     *             type="object",
      *             @OA\Property(
      *                 property="message",
      *                 type="string",
-     *                 example="The given data was invalid."
-     *             ),
-     *             @OA\Property(
-     *                 property="errors",
-     *                 type="object"
+     *                 description="A message indicating that the orderStatus was created successfully."
      *             )
      *         )
      *     )
      * )
-    */
+     */
     public function store(OrderStatusRequest $request)
     {
         // Get the data from the request
@@ -134,40 +116,31 @@ class OrderStatusController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/order-statuses/{uuid}",
-     *     summary="Get a single order status",
-     *     description="Retrieve a single order status by its UUID.",
-     *     tags={"Order Statuses"},
+     *     path="/api/v1/orderStatus/{uuid}",
+     *     summary="Get a single orderStatus by UUID",
+     *     tags={"OrderStatuses"},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
-     *         description="UUID of the order status",
+     *         description="UUID of the orderStatus to get",
      *         required=true,
      *         @OA\Schema(
-     *             type="string"
+     *             type="string",
+     *             format="uuid"
      *         )
      *     ),
      *     @OA\Response(
-     *         response=200,
+     *         response="200",
      *         description="Successful operation",
      *         @OA\JsonContent(
-     *             type="object",
      *             @OA\Property(
      *                 property="orderStatus"
      *             )
      *         )
      *     ),
      *     @OA\Response(
-     *         response=404,
-     *         description="Order status not found",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="error",
-     *                 type="string",
-     *                 example="Order status not found"
-     *             )
-     *         )
+     *         response="404",
+     *         description="OrderStatus not found"
      *     )
      * )
      */
@@ -188,62 +161,41 @@ class OrderStatusController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/order-statuses/{uuid}",
-     *     summary="Update an existing order status",
-     *     description="Update an existing order status by its UUID.",
-     *     tags={"Order Statuses"},
+     *     path="/api/v1/orderStatus/{uuid}",
+     *     summary="Update a orderStatus",
+     *     tags={"OrderStatuses"},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
-     *         description="UUID of the order status",
+     *         description="The UUID of the orderStatus to update",
      *         required=true,
      *         @OA\Schema(
-     *             type="string"
+     *             type="string",
+     *             format="uuid"
      *         )
      *     ),
      *     @OA\RequestBody(
-     *         required=true,
-     *         description="Data for updating an existing order status"
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Order status updated successfully",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="success",
-     *                 type="string",
-     *                 example="Order status updated successfully!"
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="title",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 example={"title": "OrderStatus Title"}
      *             )
      *         )
      *     ),
      *     @OA\Response(
-     *         response=404,
-     *         description="Order status not found",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="error",
-     *                 type="string",
-     *                 example="Order status not found"
-     *             )
-     *         )
+     *         response="200",
+     *         description="OrderStatus updated successfully"
      *     ),
      *     @OA\Response(
-     *         response=422,
-     *         description="Validation errors",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="The given data was invalid."
-     *             ),
-     *             @OA\Property(
-     *                 property="errors",
-     *                 type="object"
-     *             )
-     *         )
+     *         response="404",
+     *         description="OrderStatus not found"
      *     )
      * )
      */
@@ -265,42 +217,26 @@ class OrderStatusController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/order-statuses/{uuid}",
-     *     summary="Delete an existing order status",
-     *     description="Delete an existing order status by its UUID.",
-     *     tags={"Order Statuses"},
+     *     path="/api/v1/orderStatus/{uuid}",
+     *     summary="Delete a orderStatus",
+     *     tags={"OrderStatuses"},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
-     *         description="UUID of the order status",
+     *         description="The UUID of the orderStatus to delete",
      *         required=true,
      *         @OA\Schema(
-     *             type="string"
+     *             type="string",
+     *             format="uuid"
      *         )
      *     ),
      *     @OA\Response(
-     *         response=200,
-     *         description="Order status deleted successfully",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="success",
-     *                 type="string",
-     *                 example="Order status deleted successfully!"
-     *             )
-     *         )
+     *         response="200",
+     *         description="OrderStatus deleted successfully"
      *     ),
      *     @OA\Response(
-     *         response=404,
-     *         description="Order status not found",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="error",
-     *                 type="string",
-     *                 example="Order status not found"
-     *             )
-     *         )
+     *         response="404",
+     *         description="OrderStatus not found"
      *     )
      * )
      */

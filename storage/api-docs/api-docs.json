@@ -19,7 +19,7 @@
         }
     ],
     "paths": {
-        "/register": {
+        "/v1/admin/register": {
             "post": {
                 "tags": [
                     "Authentication"
@@ -97,14 +97,14 @@
                 }
             }
         },
-        "/api/login": {
+        "/api/v1/admin/login": {
             "post": {
                 "tags": [
                     "Authentication"
                 ],
                 "summary": "Logs in a user by providing email and password credentials",
                 "description": "Logs in a user and retrieves an access token",
-                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
+                "operationId": "b764a781c74a572a7bcc8209f62426b5",
                 "requestBody": {
                     "description": "The credential details of the user",
                     "required": true,
@@ -166,7 +166,444 @@
                 }
             }
         },
-        "/api/categories": {
+        "/api/v1/main/blogs": {
+            "get": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Get list of Blogs",
+                "description": "Returns list of blogs",
+                "operationId": "getBlogsList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "blogs": {
+                                            "collectionFormat": "multi"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Blogs not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/main/blog/create": {
+            "post": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Create a new blog",
+                "operationId": "326582106b2f56289088ac938d158f1a",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "slug": {
+                                        "type": "string"
+                                    },
+                                    "title": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    },
+                                    "content": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    },
+                                    "metadata": {
+                                        "oneOf": [
+                                            {
+                                                "type": "json"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "slug": "blog-slug",
+                                    "title": "Blog Title",
+                                    "content": "Blog Content",
+                                    "metadata": {
+                                        "author": "string",
+                                        "image": "UUID from petshop.files"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Blog created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "A message indicating that the blog was created successfully.",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/main/blog/{uuid}": {
+            "get": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Get a single blog by UUID",
+                "operationId": "7c8a3c84e3c70b0bc48f54d3c15bd4b5",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID of the blog to get",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "blog": {}
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Blog not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Update a blog",
+                "operationId": "727623b28a83fe27b8da92b5814697e6",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "The UUID of the blog to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "slug": {
+                                        "type": "string"
+                                    },
+                                    "title": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    },
+                                    "content": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    },
+                                    "metadata": {
+                                        "oneOf": [
+                                            {
+                                                "type": "json"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "slug": "blog-slug",
+                                    "title": "Blog Title",
+                                    "content": "Blog Content",
+                                    "metadata": {
+                                        "author": "string",
+                                        "image": "UUID from petshop.files"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Blog updated successfully"
+                    },
+                    "404": {
+                        "description": "Blog not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Blogs"
+                ],
+                "summary": "Delete a blog",
+                "operationId": "6b4e1fcc717104990832a76f805c6368",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "The UUID of the blog to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Blog deleted successfully"
+                    },
+                    "404": {
+                        "description": "Blog not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/brands": {
+            "get": {
+                "tags": [
+                    "Brands"
+                ],
+                "summary": "Get list of Brands",
+                "description": "Returns list of brands",
+                "operationId": "getBrandsList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "brands": {
+                                            "collectionFormat": "multi"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Brands not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/brand/create": {
+            "post": {
+                "tags": [
+                    "Brands"
+                ],
+                "summary": "Create a new brand",
+                "operationId": "f1db690366e4adf810594ce060dcd2ee",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "slug": {
+                                        "type": "string"
+                                    },
+                                    "title": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "slug": "brand-slug",
+                                    "title": "Brand Title"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Brand created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "A message indicating that the brand was created successfully.",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/brand/{uuid}": {
+            "get": {
+                "tags": [
+                    "Brands"
+                ],
+                "summary": "Get a single brand by UUID",
+                "operationId": "bb44258513559db36dbf030a5669ffb5",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID of the brand to get",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "brand": {}
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Brand not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Brands"
+                ],
+                "summary": "Update a brand",
+                "operationId": "a830bb01d59651f95ed127fe3fd07fa2",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "The UUID of the brand to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Brand updated successfully"
+                    },
+                    "404": {
+                        "description": "Brand not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Brands"
+                ],
+                "summary": "Delete a brand",
+                "operationId": "a4cf3c5afd6639a4117c13c91bc41420",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "The UUID of the brand to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Brand deleted successfully"
+                    },
+                    "404": {
+                        "description": "Brand not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/categories": {
             "get": {
                 "tags": [
                     "Categories"
@@ -196,16 +633,40 @@
                 }
             }
         },
-        "/categories": {
+        "/api/v1/category/create": {
             "post": {
                 "tags": [
                     "Categories"
                 ],
                 "summary": "Create a new category",
-                "operationId": "bb02f0320882db37f99574196577e446",
+                "operationId": "1203d55f94019ff1802397c73315f740",
                 "requestBody": {
-                    "description": "Category object that needs to be created",
-                    "required": true
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "slug": {
+                                        "type": "string"
+                                    },
+                                    "title": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "slug": "category-slug",
+                                    "title": "Category Title"
+                                }
+                            }
+                        }
+                    }
                 },
                 "responses": {
                     "201": {
@@ -227,13 +688,13 @@
                 }
             }
         },
-        "/categories/{uuid}": {
+        "/api/v1/category/{uuid}": {
             "get": {
                 "tags": [
                     "Categories"
                 ],
                 "summary": "Get a single category by UUID",
-                "operationId": "b9617e7afa6b3fafc37cbf883aa2b24f",
+                "operationId": "4ef0f85d7837ac90c54b006fa30dc2ff",
                 "parameters": [
                     {
                         "name": "uuid",
@@ -270,7 +731,7 @@
                     "Categories"
                 ],
                 "summary": "Update a category",
-                "operationId": "d4818e735365c518865a01c68bd7a6dc",
+                "operationId": "fbbd88b113913609dfb9832bd14fc409",
                 "parameters": [
                     {
                         "name": "uuid",
@@ -284,7 +745,32 @@
                     }
                 ],
                 "requestBody": {
-                    "required": true
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "slug": {
+                                        "type": "string"
+                                    },
+                                    "title": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "slug": "category-slug",
+                                    "title": "Category Title"
+                                }
+                            }
+                        }
+                    }
                 },
                 "responses": {
                     "200": {
@@ -300,7 +786,7 @@
                     "Categories"
                 ],
                 "summary": "Delete a category",
-                "operationId": "a901381c34a7704c317ebe68b1c5ab6b",
+                "operationId": "71d43fdfa569eb526489e02a681e352a",
                 "parameters": [
                     {
                         "name": "uuid",
@@ -323,14 +809,14 @@
                 }
             }
         },
-        "/api/order-statuses": {
+        "/api/v1/orderStatuses": {
             "get": {
                 "tags": [
-                    "Order Statuses"
+                    "OrderStatuses"
                 ],
-                "summary": "Get all order statuses",
-                "description": "Retrieve a list of all available order statuses.",
-                "operationId": "aa5dd6f14844f5c68cd4c965ee57bafc",
+                "summary": "Get list of OrderStatuses",
+                "description": "Returns list of orderStatuses",
+                "operationId": "getOrderStatusesList",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -338,11 +824,9 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Order statuses list"
-                                        },
-                                        "orderStatuses": {}
+                                        "orderStatuses": {
+                                            "collectionFormat": "multi"
+                                        }
                                     },
                                     "type": "object"
                                 }
@@ -350,63 +834,52 @@
                         }
                     },
                     "404": {
-                        "description": "Order statuses not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "error": {
-                                            "type": "string",
-                                            "example": "Order statuses not found"
-                                        }
-                                    },
-                                    "type": "object"
+                        "description": "OrderStatuses not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/orderStatus/create": {
+            "post": {
+                "tags": [
+                    "OrderStatuses"
+                ],
+                "summary": "Create a new orderStatus",
+                "operationId": "514c0acd1ec5c4092295d32dfa5f8112",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "title": "OrderStatus Title"
                                 }
                             }
                         }
                     }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Order Statuses"
-                ],
-                "summary": "Create a new order status",
-                "description": "Create a new order status from the given data.",
-                "operationId": "46be832777f65bb6a9ece0b6c265c31f",
-                "requestBody": {
-                    "description": "Data for creating a new order status",
-                    "required": true
                 },
                 "responses": {
                     "201": {
-                        "description": "Order status created successfully",
+                        "description": "OrderStatus created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
-                                            "type": "string",
-                                            "example": "Order status created successfully!"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation errors",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The given data was invalid."
-                                        },
-                                        "errors": {
-                                            "type": "object"
+                                            "description": "A message indicating that the orderStatus was created successfully.",
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
@@ -417,22 +890,22 @@
                 }
             }
         },
-        "/api/order-statuses/{uuid}": {
+        "/api/v1/orderStatus/{uuid}": {
             "get": {
                 "tags": [
-                    "Order Statuses"
+                    "OrderStatuses"
                 ],
-                "summary": "Get a single order status",
-                "description": "Retrieve a single order status by its UUID.",
-                "operationId": "8631bf18f49dd0b152a6e1baca6f6e1b",
+                "summary": "Get a single orderStatus by UUID",
+                "operationId": "a2ea85b1eaa5182e9f32504bbab46159",
                 "parameters": [
                     {
                         "name": "uuid",
                         "in": "path",
-                        "description": "UUID of the order status",
+                        "description": "UUID of the orderStatus to get",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid"
                         }
                     }
                 ],
@@ -451,160 +924,97 @@
                         }
                     },
                     "404": {
-                        "description": "Order status not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "error": {
-                                            "type": "string",
-                                            "example": "Order status not found"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "OrderStatus not found"
                     }
                 }
             },
             "put": {
                 "tags": [
-                    "Order Statuses"
+                    "OrderStatuses"
                 ],
-                "summary": "Update an existing order status",
-                "description": "Update an existing order status by its UUID.",
-                "operationId": "dcdf128613786fd9b249247c5acdcfe7",
+                "summary": "Update a orderStatus",
+                "operationId": "ec1751ccaf06069daa57a885a55a25be",
                 "parameters": [
                     {
                         "name": "uuid",
                         "in": "path",
-                        "description": "UUID of the order status",
+                        "description": "The UUID of the orderStatus to update",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid"
                         }
                     }
                 ],
                 "requestBody": {
-                    "description": "Data for updating an existing order status",
-                    "required": true
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "title": "OrderStatus Title"
+                                }
+                            }
+                        }
+                    }
                 },
                 "responses": {
                     "200": {
-                        "description": "Order status updated successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "string",
-                                            "example": "Order status updated successfully!"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "OrderStatus updated successfully"
                     },
                     "404": {
-                        "description": "Order status not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "error": {
-                                            "type": "string",
-                                            "example": "Order status not found"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation errors",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The given data was invalid."
-                                        },
-                                        "errors": {
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "OrderStatus not found"
                     }
                 }
             },
             "delete": {
                 "tags": [
-                    "Order Statuses"
+                    "OrderStatuses"
                 ],
-                "summary": "Delete an existing order status",
-                "description": "Delete an existing order status by its UUID.",
-                "operationId": "9e3f76cd36190d71a29cddf60a4be9a5",
+                "summary": "Delete a orderStatus",
+                "operationId": "a0e24663f7e42645e3b1277510ac19c6",
                 "parameters": [
                     {
                         "name": "uuid",
                         "in": "path",
-                        "description": "UUID of the order status",
+                        "description": "The UUID of the orderStatus to delete",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Order status deleted successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "string",
-                                            "example": "Order status deleted successfully!"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "OrderStatus deleted successfully"
                     },
                     "404": {
-                        "description": "Order status not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "error": {
-                                            "type": "string",
-                                            "example": "Order status not found"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "OrderStatus not found"
                     }
                 }
             }
         },
-        "/products": {
+        "/api/v1/products": {
             "get": {
                 "tags": [
                     "Products"
                 ],
-                "summary": "Get all products",
-                "operationId": "c1ff6f862214e1896c59cfe0491ce0e8",
+                "summary": "Get list of Products",
+                "description": "Returns list of products",
+                "operationId": "getProductsList",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -612,24 +1022,80 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "products": {}
+                                        "products": {
+                                            "collectionFormat": "multi"
+                                        }
                                     },
                                     "type": "object"
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "Products not found"
                     }
                 }
-            },
+            }
+        },
+        "/api/v1/product/create": {
             "post": {
                 "tags": [
                     "Products"
                 ],
                 "summary": "Create a new product",
-                "operationId": "399770d33fa4672f1216707d0e236763",
+                "operationId": "5fb16fdd651aaa9ed219b4f689ec4f7a",
                 "requestBody": {
-                    "description": "Product object that needs to be created",
-                    "required": true
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "slug": {
+                                        "type": "string"
+                                    },
+                                    "title": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    },
+                                    "content": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    },
+                                    "metadata": {
+                                        "oneOf": [
+                                            {
+                                                "type": "json"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "slug": "product-slug",
+                                    "title": "Product Title",
+                                    "content": "Product Content",
+                                    "metadata": {
+                                        "brand": "UUID from petshop.brands",
+                                        "image": "UUID  petshop.files"
+                                    }
+                                }
+                            }
+                        }
+                    }
                 },
                 "responses": {
                     "201": {
@@ -651,13 +1117,13 @@
                 }
             }
         },
-        "/products/{uuid}": {
+        "/api/v1/product/{uuid}": {
             "get": {
                 "tags": [
                     "Products"
                 ],
                 "summary": "Get a single product by UUID",
-                "operationId": "f271bec4250230adb5945340b7aa979a",
+                "operationId": "2ff81043cefbed5f9cb8596450eaa36f",
                 "parameters": [
                     {
                         "name": "uuid",
@@ -694,7 +1160,7 @@
                     "Products"
                 ],
                 "summary": "Update a product",
-                "operationId": "16871a2c31f7742ecb36c971118c9a01",
+                "operationId": "7575aacb5271ca92b065c0e92b02189d",
                 "parameters": [
                     {
                         "name": "uuid",
@@ -708,7 +1174,57 @@
                     }
                 ],
                 "requestBody": {
-                    "required": true
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "slug": {
+                                        "type": "string"
+                                    },
+                                    "title": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    },
+                                    "content": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    },
+                                    "metadata": {
+                                        "oneOf": [
+                                            {
+                                                "type": "json"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "slug": "product-slug",
+                                    "title": "Product Title",
+                                    "content": "Product Content",
+                                    "metadata": {
+                                        "brand": "UUID from petshop.brands",
+                                        "image": "UUID from petshop.files"
+                                    }
+                                }
+                            }
+                        }
+                    }
                 },
                 "responses": {
                     "200": {
@@ -724,7 +1240,7 @@
                     "Products"
                 ],
                 "summary": "Delete a product",
-                "operationId": "db1eb6ca2f25827576a8443b5cb09b04",
+                "operationId": "42c44ddc96e487ac21c8040d395d21b4",
                 "parameters": [
                     {
                         "name": "uuid",
@@ -743,6 +1259,264 @@
                     },
                     "404": {
                         "description": "Product not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/main/promotions": {
+            "get": {
+                "tags": [
+                    "Promotions"
+                ],
+                "summary": "Get list of Promotions",
+                "description": "Returns list of promotions",
+                "operationId": "getPromotionsList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "promotions": {
+                                            "collectionFormat": "multi"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Promotions not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/main/promotion/create": {
+            "post": {
+                "tags": [
+                    "Promotions"
+                ],
+                "summary": "Create a new promotion",
+                "operationId": "92dab1430a68c67b742645a1a8f6ef33",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "slug": {
+                                        "type": "string"
+                                    },
+                                    "title": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    },
+                                    "content": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    },
+                                    "metadata": {
+                                        "oneOf": [
+                                            {
+                                                "type": "json"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "slug": "promotion-slug",
+                                    "title": "Promotion Title",
+                                    "content": "Promotion Content",
+                                    "metadata": {
+                                        "valid_from": "date(Y-m-d)",
+                                        "valid_to": "date(Y-m-d)",
+                                        "image": "UUID from petshop.files"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Promotion created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "A message indicating that the promotion was created successfully.",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/main/promotion/{uuid}": {
+            "get": {
+                "tags": [
+                    "Promotions"
+                ],
+                "summary": "Get a single promotion by UUID",
+                "operationId": "9897ce715f48acd12d8c83440499750d",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "UUID of the promotion to get",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "promotion": {}
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Promotion not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Promotions"
+                ],
+                "summary": "Update a promotion",
+                "operationId": "d660cb44cdefd99e366f3482a3b7a797",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "The UUID of the promotion to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "slug": {
+                                        "type": "string"
+                                    },
+                                    "title": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    },
+                                    "content": {
+                                        "oneOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    },
+                                    "metadata": {
+                                        "oneOf": [
+                                            {
+                                                "type": "json"
+                                            },
+                                            {
+                                                "type": "integer"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "slug": "promotion-slug",
+                                    "title": "Promotion Title",
+                                    "content": "Promotion Content",
+                                    "metadata": {
+                                        "valid_from": "date(Y-m-d)",
+                                        "valid_to": "date(Y-m-d)",
+                                        "image": "UUID from petshop.files"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Promotion updated successfully"
+                    },
+                    "404": {
+                        "description": "Promotion not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Promotions"
+                ],
+                "summary": "Delete a promotion",
+                "operationId": "f0f58c19ceca7d5f7ce8ad66608990ea",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "The UUID of the promotion to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Promotion deleted successfully"
+                    },
+                    "404": {
+                        "description": "Promotion not found"
                     }
                 }
             }

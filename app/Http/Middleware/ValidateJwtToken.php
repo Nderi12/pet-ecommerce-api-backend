@@ -3,11 +3,11 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use DateTimeImmutable;
 use Exception;
 use Lcobucci\JWT\Encoding\JoseEncoder;
-use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
-use DateTimeImmutable;
+use Lcobucci\JWT\Token\Parser;
 
 class ValidateJwtToken
 {
@@ -21,11 +21,11 @@ class ValidateJwtToken
         $token = $request->bearerToken();
 
         $key = substr(config('app.key'), 7);
-        
-        if (!$token) {
+
+        if (! $token) {
             return response()->json(['message' => 'Unauthorized!'], 401);
         }
-        
+
         try {
             $parser = new Parser(new JoseEncoder());
             $parsedToken = $parser->parse($token);
@@ -33,26 +33,26 @@ class ValidateJwtToken
         } catch (\Exception $e) {
             return response()->json(['message' => 'Invalid token'], 401);
         }
-        
+
         $signer = new Sha256();
         $secretKey = $key;
 
-        if (!$parsedToken->isPermittedFor(config('app.url'))) {
-            throw new Exception("Invalid token", 1);   
+        if (! $parsedToken->isPermittedFor(config('app.url'))) {
+            throw new Exception('Invalid token', 1);
         }
 
-        if (!$parsedToken->hasBeenIssuedBy(config('app.url'))) {
-            throw new Exception("Invalid token 2", 1);
+        if (! $parsedToken->hasBeenIssuedBy(config('app.url'))) {
+            throw new Exception('Invalid token 2', 1);
         }
 
         if ($parsedToken->isExpired(new DateTimeImmutable('now'))) {
-            throw new Exception("Invalid token 3", 1);
+            throw new Exception('Invalid token 3', 1);
         }
 
         $uid = $parsedToken->claims()->get('uid');
 
         $request->merge(['uid' => $uid]);
-        
+
         return $next($request);
     }
 }

@@ -1,10 +1,13 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\ProductController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,12 +21,36 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => 'v1/admin'], function() {
+// Admin routes
+Route::group(['prefix' => 'v1/admin'], function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/reset-password-token', [AuthController::class, 'resetPassword']);
+
+    // Users endpoints/apis
+    Route::get('user-listing', [UserController::class, 'index']);
+    Route::put('user-edit/{uuid}', [UserController::class, 'update']);
+    Route::delete('user-delete/{uuid}', [UserController::class, 'destroy']);
 });
 
-Route::group(['middleware' => 'jwt', 'prefix' => 'v1'], function  () {
+// Main routes
+Route::group(['prefix' => 'v1/main'], function () {
+    // Blog endpoints/apis
+    Route::get('blogs', [BlogController::class, 'index']);
+    Route::post('blog/create', [BlogController::class, 'store']);
+    Route::get('blog/{uuid}', [BlogController::class, 'show']);
+    Route::put('blog/{uuid}', [BlogController::class, 'update']);
+    Route::delete('blog/{uuid}', [BlogController::class, 'destroy']);
+
+    // Promotion endpoints/apis
+    Route::get('promotions', [PromotionController::class, 'index']);
+    Route::post('promotion/create', [PromotionController::class, 'store']);
+    Route::get('promotion/{uuid}', [PromotionController::class, 'show']);
+    Route::put('promotion/{uuid}', [PromotionController::class, 'update']);
+    Route::delete('promotion/{uuid}', [PromotionController::class, 'destroy']);
+});
+
+Route::group(['middleware' => 'jwt', 'prefix' => 'v1'], function () {
     // Category endpoints/apis
     Route::get('categories', [CategoryController::class, 'index']);
     Route::post('category/create', [CategoryController::class, 'store']);
@@ -44,4 +71,11 @@ Route::group(['middleware' => 'jwt', 'prefix' => 'v1'], function  () {
     Route::get('order-status/{uuid}', [OrderStatusController::class, 'show']);
     Route::put('order-status/{uuid}', [OrderStatusController::class, 'update']);
     Route::delete('order-status/{uuid}', [OrderStatusController::class, 'destroy']);
+
+    // Brand endpoints/apis
+    Route::get('brands', [BrandController::class, 'index']);
+    Route::post('brand/create', [BrandController::class, 'store']);
+    Route::get('brand/{uuid}', [BrandController::class, 'show']);
+    Route::put('brand/{uuid}', [BrandController::class, 'update']);
+    Route::delete('brand/{uuid}', [BrandController::class, 'destroy']);
 });

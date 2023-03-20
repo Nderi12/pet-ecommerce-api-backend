@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CategoryRequest;
-use App\Models\Category;
+use App\Http\Requests\PromotionRequest;
+use App\Models\Promotion;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
-class CategoryController extends Controller
+class PromotionController extends Controller
 {
     /**
      * Create a new AuthController instance.
@@ -24,49 +24,49 @@ class CategoryController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/v1/categories",
-     *      operationId="getCategoriesList",
-     *      summary="Get list of Categories",
-     *      description="Returns list of categories",
-     *      tags={"Categories"},
+     *      path="/api/v1/main/promotions",
+     *      operationId="getPromotionsList",
+     *      summary="Get list of Promotions",
+     *      description="Returns list of promotions",
+     *      tags={"Promotions"},
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
      *      	  @OA\JsonContent(
      *              type="object",
      *              @OA\Property(
-     *                  property="categories",
+     *                  property="promotions",
      *                  collectionFormat="multi"
      *              )
      *          )
      *      ),
      *      @OA\Response(
      *          response=404,
-     *          description="Categories not found"
+     *          description="Promotions not found"
      *      )
      * )
      */
     public function index()
     {
-        $categories = Category::all();
+        $promotions = Promotion::all();
 
-        if (!$categories) {
+        if (!$promotions) {
             return response()->json([
-                'error' => 'Categories not found'
+                'error' => 'Promotions not found'
             ], Response::HTTP_NOT_FOUND);
         }
 
         // Return response with message and data
         return response()->json([
-            'categories' => $categories
+            'promotions' => $promotions
         ], Response::HTTP_OK);
     }
 
     /**
      * @OA\Post(
-     *     path="/api/v1/category/create",
-     *     summary="Create a new category",
-     *     tags={"Categories"},
+     *     path="/api/v1/main/promotion/create",
+     *     summary="Create a new promotion",
+     *     tags={"Promotions"},
      *     @OA\RequestBody(
      *         @OA\MediaType(
      *             mediaType="application/json",
@@ -82,51 +82,65 @@ class CategoryController extends Controller
      *                     	   @OA\Schema(type="integer"),
      *                     }
      *                 ),
-     *                 example={"slug": "category-slug", "title": "Category Title"}
+     *                 @OA\Property(
+     *                     property="content",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 @OA\Property(
+     *                     property="metadata",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="json"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 example={"slug": "promotion-slug", "title": "Promotion Title", "content": "Promotion Content", "metadata": {"valid_from": "date(Y-m-d)", "valid_to": "date(Y-m-d)",   "image": "UUID from petshop.files"}}
      *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response="201",
-     *         description="Category created successfully",
+     *         description="Promotion created successfully",
      *         @OA\JsonContent(
      *             @OA\Property(
      *                 property="message",
      *                 type="string",
-     *                 description="A message indicating that the category was created successfully."
+     *                 description="A message indicating that the promotion was created successfully."
      *             )
      *         )
      *     )
      * )
      */
-    public function store(CategoryRequest $request)
+    public function store(PromotionRequest $request)
     {
         // Get the data from the request
         $data = $request->validated();
 
-        // Create an empty category
-        $category = Category::make();
+        // Create an empty promotion
+        $promotion = Promotion::make();
 
-        DB::transaction(function () use ($data, $category) {
-            // create a new category from the validated data
-            $category->create($data);
+        DB::transaction(function () use ($request, $promotion) {
+            // create a new promotion from the validated request
+            $promotion->create($request->all());
         });
 
         // Return response with message and data
         return response()->json([
-            'message' => 'Category created successfully!'
+            'message' => 'Promotion created successfully!'
         ], Response::HTTP_CREATED); // 201 response for created
     }
 
     /**
      * @OA\Get(
-     *     path="/api/v1/category/{uuid}",
-     *     summary="Get a single category by UUID",
-     *     tags={"Categories"},
+     *     path="/api/v1/main/promotion/{uuid}",
+     *     summary="Get a single promotion by UUID",
+     *     tags={"Promotions"},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
-     *         description="UUID of the category to get",
+     *         description="UUID of the promotion to get",
      *         required=true,
      *         @OA\Schema(
      *             type="string",
@@ -138,40 +152,40 @@ class CategoryController extends Controller
      *         description="Successful operation",
      *         @OA\JsonContent(
      *             @OA\Property(
-     *                 property="category"
+     *                 property="promotion"
      *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response="404",
-     *         description="Category not found"
+     *         description="Promotion not found"
      *     )
      * )
      */
     public function show($uuid)
     {
-        $category = Category::where('uuid', $uuid)->with(['products'])->first();
+        $promotion = Promotion::where('uuid', $uuid)->first();
 
-        if (!$category) {
+        if (!$promotion) {
             return response()->json([
-                'error' => 'Category not found'
+                'error' => 'Promotion not found'
             ], Response::HTTP_NOT_FOUND);
         }
 
         return response()->json([
-            'category' => $category
+            'promotion' => $promotion
         ], Response::HTTP_OK);
     }
 
     /**
      * @OA\Put(
-     *     path="/api/v1/category/{uuid}",
-     *     summary="Update a category",
-     *     tags={"Categories"},
+     *     path="/api/v1/main/promotion/{uuid}",
+     *     summary="Update a promotion",
+     *     tags={"Promotions"},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
-     *         description="The UUID of the category to update",
+     *         description="The UUID of the promotion to update",
      *         required=true,
      *         @OA\Schema(
      *             type="string",
@@ -193,51 +207,65 @@ class CategoryController extends Controller
      *                     	   @OA\Schema(type="integer"),
      *                     }
      *                 ),
-     *                 example={"slug": "category-slug", "title": "Category Title"}
+     *                 @OA\Property(
+     *                     property="content",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 @OA\Property(
+     *                     property="metadata",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="json"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 example={"slug": "promotion-slug", "title": "Promotion Title", "content": "Promotion Content", "metadata": {"valid_from": "date(Y-m-d)", "valid_to": "date(Y-m-d)",   "image": "UUID from petshop.files"}}
      *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response="200",
-     *         description="Category updated successfully"
+     *         description="Promotion updated successfully"
      *     ),
      *     @OA\Response(
      *         response="404",
-     *         description="Category not found"
+     *         description="Promotion not found"
      *     )
      * )
      */
-    public function update(CategoryRequest $request, $uuid)
+    public function update(PromotionRequest $request, $uuid)
     {
-        $category = Category::where('uuid', $uuid)->first();
+        $promotion = Promotion::where('uuid', $uuid)->first();
 
-        if (!$category) {
+        if (!$promotion) {
             return response()->json([
-                'error' => 'Category not found'
+                'error' => 'Promotion not found'
             ], Response::HTTP_NOT_FOUND);
         }
 
         //validate data
         $data = $request->validated();
 
-        // Update the category data
-        $category->update($data);
+        // Update the promotion data
+        $promotion->update($data);
 
         //Return response with message and data
         return response()->json([
-            'success' => 'Category updated successfully!'
+            'success' => 'Promotion updated successfully!'
         ], Response::HTTP_OK);
     }
 
     /**
      * @OA\Delete(
-     *     path="/api/v1/category/{uuid}",
-     *     summary="Delete a category",
-     *     tags={"Categories"},
+     *     path="/api/v1/main/promotion/{uuid}",
+     *     summary="Delete a promotion",
+     *     tags={"Promotions"},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
-     *         description="The UUID of the category to delete",
+     *         description="The UUID of the promotion to delete",
      *         required=true,
      *         @OA\Schema(
      *             type="string",
@@ -246,30 +274,30 @@ class CategoryController extends Controller
      *     ),
      *     @OA\Response(
      *         response="200",
-     *         description="Category deleted successfully"
+     *         description="Promotion deleted successfully"
      *     ),
      *     @OA\Response(
      *         response="404",
-     *         description="Category not found"
+     *         description="Promotion not found"
      *     )
      * )
      */
     public function destroy($uuid)
     {
-        $category = Category::where('uuid', $uuid)->first();
+        $promotion = Promotion::where('uuid', $uuid)->first();
 
-        if (!$category) {
+        if (!$promotion) {
             return response()->json([
-                'error' => 'Category not found'
+                'error' => 'Promotion not found'
             ], Response::HTTP_NOT_FOUND);
         }
 
-        //  Delete the category
-        $category->delete();
+        //  Delete the promotion
+        $promotion->delete();
 
         // Return response with message
         return response()->json([
-            'success' => 'Category deleted successfully!'
+            'success' => 'Promotion deleted successfully!'
         ], Response::HTTP_OK);
     }
 }

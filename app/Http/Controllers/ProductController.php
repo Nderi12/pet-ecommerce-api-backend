@@ -24,18 +24,26 @@ class ProductController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/products",
-     *     summary="Get all products",
-     *     tags={"Products"},
-     *     @OA\Response(
-     *         response="200",
-     *         description="Successful operation",
-     *         @OA\JsonContent(
-     *             @OA\Property(
-     *                 property="products"
-     *             )
-     *         )
-     *     )
+     *      path="/api/v1/products",
+     *      operationId="getProductsList",
+     *      summary="Get list of Products",
+     *      description="Returns list of products",
+     *      tags={"Products"},
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      	  @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="products",
+     *                  collectionFormat="multi"
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Products not found"
+     *      )
      * )
      */
     public function index()
@@ -56,12 +64,41 @@ class ProductController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/products",
+     *     path="/api/v1/product/create",
      *     summary="Create a new product",
      *     tags={"Products"},
      *     @OA\RequestBody(
-     *         required=true,
-     *         description="Product object that needs to be created"
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="slug",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="title",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 @OA\Property(
+     *                     property="content",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 @OA\Property(
+     *                     property="metadata",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="json"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 example={"slug": "product-slug", "title": "Product Title", "content": "Product Content", "metadata": {"brand": "UUID from petshop.brands","image": "UUID  petshop.files"}}
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response="201",
@@ -97,7 +134,7 @@ class ProductController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/products/{uuid}",
+     *     path="/api/v1/product/{uuid}",
      *     summary="Get a single product by UUID",
      *     tags={"Products"},
      *     @OA\Parameter(
@@ -127,7 +164,7 @@ class ProductController extends Controller
      */
     public function show($uuid)
     {
-        $product = Product::where('uuid', $uuid)->first();
+        $product = Product::where('uuid', $uuid)->with(['category'])->first();
 
         if (!$product) {
             return response()->json([
@@ -142,7 +179,7 @@ class ProductController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/products/{uuid}",
+     *     path="/api/v1/product/{uuid}",
      *     summary="Update a product",
      *     tags={"Products"},
      *     @OA\Parameter(
@@ -156,7 +193,37 @@ class ProductController extends Controller
      *         )
      *     ),
      *     @OA\RequestBody(
-     *         required=true
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="slug",
+     *                     type="string"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="title",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 @OA\Property(
+     *                     property="content",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="string"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 @OA\Property(
+     *                     property="metadata",
+     *                     oneOf={
+     *                     	   @OA\Schema(type="json"),
+     *                     	   @OA\Schema(type="integer"),
+     *                     }
+     *                 ),
+     *                 example={"slug": "product-slug", "title": "Product Title", "content": "Product Content", "metadata": {"brand": "UUID from petshop.brands","image": "UUID from petshop.files"}}
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response="200",
@@ -192,7 +259,7 @@ class ProductController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/products/{uuid}",
+     *     path="/api/v1/product/{uuid}",
      *     summary="Delete a product",
      *     tags={"Products"},
      *     @OA\Parameter(
